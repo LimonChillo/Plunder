@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150103161053) do
+ActiveRecord::Schema.define(version: 20150103181821) do
+
+  create_table "matches", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "partner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id"
