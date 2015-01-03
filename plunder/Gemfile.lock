@@ -193,7 +193,6 @@ DEPENDENCIES
   haml
   jbuilder (~> 2.0)
   jquery-rails
-  omniauth
   omniauth-facebook
   rails (= 4.2.0)
   sass-rails (~> 5.0)

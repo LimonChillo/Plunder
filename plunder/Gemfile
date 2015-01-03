@@ -46,8 +46,6 @@ group :development, :test do
 
   gem 'devise'
 
-  gem 'omniauth'
-
   gem 'omniauth-facebook'
 end
 
