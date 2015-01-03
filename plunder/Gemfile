@@ -43,7 +43,11 @@ group :development, :test do
   gem 'spring'
 
   gem 'haml'
-  
+
   gem 'devise'
+
+  gem 'omniauth'
+
+  gem 'omniauth-facebook'
 end
 
