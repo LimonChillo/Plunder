@@ -2,11 +2,11 @@ Rails.application.routes.draw do
 
   resources :articles
 
-  get 'users/finish_signup'
+  get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
+  #match "/matches/:id" => "articles#matches"
+
 
   devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }
-  get 'product/show'
-  get 'product/edit'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -33,7 +33,6 @@ end
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
-     resources :products
 
   # Example resource route with options:
   #   resources :products do

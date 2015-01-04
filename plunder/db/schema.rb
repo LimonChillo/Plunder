@@ -32,14 +32,8 @@ ActiveRecord::Schema.define(version: 20150104142855) do
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
   create_table "matches", force: :cascade do |t|
-    t.integer  "product_id"
+    t.integer  "article_id"
     t.integer  "partner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "products", force: :cascade do |t|
-    t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

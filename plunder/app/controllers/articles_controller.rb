@@ -36,6 +36,11 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
+  def matches
+    @matches = Article.find_by_id(params[:id]).partners.all
+  end
+
+
   private
     def set_article
       @article = Article.find(params[:id])
