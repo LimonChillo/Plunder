@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150103181821) do
+ActiveRecord::Schema.define(version: 20150104142855) do
 
-  create_table "matches", force: :cascade do |t|
-    t.integer  "product_id"
-    t.integer  "partner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "articles", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "shippable"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "identities", force: :cascade do |t|
@@ -30,8 +31,15 @@ ActiveRecord::Schema.define(version: 20150103181821) do
 
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
-  create_table "products", force: :cascade do |t|
-    t.string   "name"
+  create_table "matches", force: :cascade do |t|
+    t.integer  "product_id"
+    t.integer  "partner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tests", force: :cascade do |t|
+    t.string   "hallo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

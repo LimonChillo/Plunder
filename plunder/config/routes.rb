@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :articles
+
   get 'users/finish_signup'
 
   devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }
