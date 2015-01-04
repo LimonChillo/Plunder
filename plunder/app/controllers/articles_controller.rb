@@ -36,10 +36,51 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
-  def matches
-    @matches = Article.find_by_id(params[:id]).partners.all
-  end
+  # FAV
+  # def matches
+  #   @matches = Article.find_by_id(params[:id]).partners.all
+  # end
 
+  def matches
+    currentUser = params[:id]
+    ownProducts = Article.where(:user_id => currentUser)
+
+    likedFavoriteIds = Match.where(:like => true, :user_id => currentUser).pluck(:favorite_id)
+    favoritedProducts = Article.where(:id => likedFavoriteIds)
+    favoritedUsers = User.joins(:articles).where(:articles => {:id => favoritedProducts}).distinct
+
+    likeingUsersIds = Match.where(:like => true, :favorite_id => ownProducts).pluck(:user_id)
+    likeingUser = User.where(:id => likeingUsersIds)
+    
+    #producstFromLikingUser = Article.join(:users).where(:user => {:id => likeingUsersIds}).all
+
+    matchedUsers = (favoritedUsers & likeingUser)
+
+    producstFromMatchedUser = Article.joins(:users).where(:user => {:id => matchedUsers})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @matches = matchedUsers
+  end
 
   private
     def set_article
