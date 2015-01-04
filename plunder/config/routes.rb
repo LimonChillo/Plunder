@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
 
+  get 'articles/random' => 'articles#random'
   resources :articles
 
   get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
   #match "/matches/:id" => "articles#matches"
-
+  #get 'articles/random' => 'articles#random'
 
   devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }
 

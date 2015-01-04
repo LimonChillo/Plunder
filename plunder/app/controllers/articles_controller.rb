@@ -21,7 +21,8 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    @article = Article.new(article_params)
+    #article_params
+    @article = Article.new(article_params.merge(:user_id => current_user.id))
     @article.save
     respond_with(@article)
   end
@@ -40,6 +41,9 @@ class ArticlesController < ApplicationController
     @matches = Article.find_by_id(params[:id]).partners.all
   end
 
+  def random
+    @random_article = Article.where.not(:user_id => current_user).first
+  end
 
   private
     def set_article

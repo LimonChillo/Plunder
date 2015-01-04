@@ -13,7 +13,7 @@ m = u1.articles.create(name: 'Milch')
 b = u2.articles.create(name: 'Butter')
 
 
- u1.likes << m
- u1.likes << b
+ u1.favorites << m
+ u1.favorites << b
 
- u2.likes << b
+ u2.favorites << b
