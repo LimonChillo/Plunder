@@ -1,4 +1,6 @@
 class Article < ActiveRecord::Base
 	has_many :matches
-  	has_many :partners, :through => :matches, :source => :partner
+  	has_many :users, :through => :matches
+  	
+  	belongs_to :user
 end

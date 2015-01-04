@@ -1,4 +1,9 @@
 class User < ActiveRecord::Base
+  has_many :articles
+  has_many :matches
+  has_many :favorites, :through => :matches :source => :favorite
+
+
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/
 
