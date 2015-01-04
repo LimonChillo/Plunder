@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20150104142855) do
     t.boolean  "shippable"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "user_id",     null: false
   end
 
   create_table "identities", force: :cascade do |t|
@@ -32,8 +33,9 @@ ActiveRecord::Schema.define(version: 20150104142855) do
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
   create_table "matches", force: :cascade do |t|
-    t.integer  "article_id"
-    t.integer  "partner_id"
+    t.integer  "favorite_id"
+    t.integer  "user_id"
+    t.boolean  "like"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

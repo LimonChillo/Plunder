@@ -11,7 +11,7 @@
   </thead>
 
   <tbody>
-    <% @articles.where(:name => 'a').each do |article| %>
+    <% @articles.each do |article| %> <!--where(:name => 'a').-->
       <tr>
         <td><%= article.name %></td>
         <td><%= article.description %></td>
