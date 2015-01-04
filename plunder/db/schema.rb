@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150104142855) do
 
-
   create_table "articles", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -21,7 +20,6 @@ ActiveRecord::Schema.define(version: 20150104142855) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
-
 
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id"
@@ -34,12 +32,11 @@ ActiveRecord::Schema.define(version: 20150104142855) do
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
   create_table "matches", force: :cascade do |t|
-    t.integer  "product_id"
+    t.integer  "article_id"
     t.integer  "partner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
 
   create_table "tests", force: :cascade do |t|
     t.string   "hallo"
