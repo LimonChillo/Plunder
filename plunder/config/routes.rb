@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :articles
 
   #get 'articles/matches/:state/:action' =>'articles#matches', :as => "matches_article_with_params"
-  get 'articles/matches/' =>'articles#matches', :as => "matches_article_with_params"
+  get 'articles/exchangeHandler' =>'articles#exchangeHandler', :as => "matches_exchangeHandler"
 
   #match "/matches/:id" => "articles#matches"
   #get 'articles/random' => 'articles#random'
