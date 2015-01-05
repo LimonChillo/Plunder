@@ -38,7 +38,9 @@ class ArticlesController < ApplicationController
   end
 
   def matches
-    @currentUser = params[:id]
+
+    #@currentUser = params[:id]
+    @currentUser = current_user.id
     ownProducts = Article.where(:user_id => @currentUser)
 
     likedFavoriteIds = Match.where(:like => true, :user_id => @currentUser).pluck(:favorite_id)
@@ -79,7 +81,22 @@ class ArticlesController < ApplicationController
       myMatches.each do |my|
         otherMatches.each do |other|
 
-          hash = { :other => my, :my => other}
+          
+
+          #----------------------------------------
+          # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
+
+          # if actualExchange.user_1 == true
+          #   state = "accepted"
+          # elsif actualExchange.user_1 == false
+          #   state = "rejectet"
+          # else
+          #   state = "null"
+          # end  
+
+          #----------------------------------------
+
+          hash = { :other => my, :my => other, :state => state}
           array.push(hash)
 
         end
@@ -88,6 +105,8 @@ class ArticlesController < ApplicationController
       @matches.push(array)
 
     end
+
+
 
 
 

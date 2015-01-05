@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
 
+  get 'articles/matches' =>'articles#matches', :as => "matches_article"
   get 'articles/random' => 'articles#random'
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
   resources :articles
 
-  get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
+  #get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
+ 
   #match "/matches/:id" => "articles#matches"
   #get 'articles/random' => 'articles#random'
 

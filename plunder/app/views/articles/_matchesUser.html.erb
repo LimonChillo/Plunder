@@ -2,7 +2,7 @@
     first = true 
     user.each do |match| 
 %>
-    <div class="row matchesArticles">
+    <div class="row matchesArticle <%= "#{match[:state]}" %>">
         <div class="col-md-2 a">
             <%= if first 
                 image_tag "u#{@currentUser}.png", :class => 'img-responsive'
@@ -13,13 +13,7 @@
             <%= image_tag "a#{match[:my].id}.jpg", :class => 'img-responsive'  %>
         </div>
         <div class="col-md-2 c">
-            <button type="button" class="btn btn-primary">
-                <span class="glyphicon glyphicon-refresh btn-lg" aria-hidden="true"></span> Tausch
-            </button>
-            <br>
-            <button type="button" class="btn btn-danger btn-xs">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Abbruch
-            </button>
+             <%= render "exchangeForm", :id1 => match[:my].id, :id2 => match[:other].id, :state => match[:state]%>
         </div>
         <div class="col-md-3 d">
             <%= image_tag "a#{match[:other].id}.jpg", :class => 'img-responsive'  %>
