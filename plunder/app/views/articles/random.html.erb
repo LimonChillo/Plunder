@@ -1,28 +1,35 @@
-<%# @article = Article.find_by_id(params[:id]) %>
+<% %>
  <div class="row randomArticle">
     <div class="col-md-4 col-md-offset-4">
-      <div class="randomImg">
-        <%= image_tag "a#{@random_article.id}.jpg", :class => 'img-responsive'  %>
-      </div>
-      <p>
-        <strong>
-          <%= @random_article.name %>
-        </strong>
-      </p>
+      <% if @random_article != nil %>
+        <div class="randomImg">
+          <%= image_tag "a#{@random_article.id}.jpg", :class => 'img-responsive'  %>
+        </div>
+        <p>
+          <strong>
+            <%= @random_article.name %>
+          </strong>
+        </p>
 
-      <p>
-        <strong>Description:</strong>
-        <%= @random_article.description %>
-      </p>
+        <p>
+          <strong>Description:</strong>
+          <%= @random_article.description %>
+        </p>
 
-      <p>
-        <strong>Shippable:</strong>
-        <%= @random_article.shippable %>
-      </p>
+        <p>
+          <strong>Shippable:</strong>
+          <%= @random_article.shippable %>
+        </p>
 
-      <button>Like</button>
-      <button>Nope</button>
-      <%= link_to 'Like', like_article_path(:id => @random_article.id) %>
+        <button>Like</button>
+        <button>Nope</button>
+        <%= link_to 'Like', like_article_path(:id => @random_article.id) %>
+
+      <% else %>
+        <h2> There are no Articles you have not seen yet :(</h2>
+        <br />
+        <%= link_to 'Check again', random_article_path, :class => 'btn btn-default center-block' %>
+      <% end %>
 </div>
 <%# link_to 'Edit', edit_article_path(@article) %>
 <%# link_to 'Back', articles_path %>

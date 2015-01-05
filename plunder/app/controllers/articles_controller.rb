@@ -79,7 +79,7 @@ class ArticlesController < ApplicationController
 
   def matches
 
-    
+
     @currentUser = current_user.id
     # Alle eigenen Artikel
     ownProducts = Article.where(:user_id => @currentUser)
@@ -176,8 +176,8 @@ class ArticlesController < ApplicationController
     end
   end
 
-  # Führt je nach Status und gedrückten Button, Datenbankoperationen aus 
-  def exchangeHandler 
+  # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
+  def exchangeHandler
     action = params[:action]
     state = params[:state]
 
@@ -194,7 +194,7 @@ class ArticlesController < ApplicationController
 
     when "neutral"
 
-    else  
+    else
     end
   end
 
