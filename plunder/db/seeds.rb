@@ -9,15 +9,15 @@
 u1 = User.create!({:email => "a@a.aa", :password => "11111111", :password_confirmation => "11111111" })
 u2 = User.create!({:email => "b@b.bb", :password => "11111111", :password_confirmation => "11111111" })
 u3 = User.create!({:email => "c@c.cc", :password => "11111111", :password_confirmation => "11111111" })
-u4 = User.create!({:email => "c@b.cc", :password => "11111111", :password_confirmation => "11111111" })
-
+u4 = User.create!({:email => "d@d.dd", :password => "11111111", :password_confirmation => "11111111" })
+u5 = User.create!({:email => "e@e.ee", :password => "11111111", :password_confirmation => "11111111" })
 
 m = u1.articles.create(name: 'Monitor')
 b = u1.articles.create(name: 'Lego')
 e = u2.articles.create(name: 'Ente')
 f = u3.articles.create(name: 'Hotwheels')
 s = u3.articles.create(name: 'Nudeln')
-
+t = u5.articles.create(name: 'Tisch')
 
 
 
@@ -42,6 +42,9 @@ u3.favorites << m
 u3.favorites << e
 u4.favorites << m
 u4.favorites << b
+
+u5.favorites << m
+u5.favorites << b
 
 
 

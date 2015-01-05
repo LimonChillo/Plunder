@@ -94,7 +94,12 @@ class ArticlesController < ApplicationController
   end
 
   def random
-    @random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id").where.not(:user_id => current_user.id).order("RANDOM()").first
+    othersArticles = Article.where.not(:user_id => current_user.id)
+    matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
+
+    @random_article = othersArticles.where.not(:id => matchedByMe).order("RANDOM()").first
+
+    #@random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id ").all.distinct #.order("RANDOM()")
 
   end
 
