@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20150105141735) do
     t.integer  "article_id_2"
     t.boolean  "user_1"
     t.boolean  "user_2"
+    t.boolean  "accept_1"
+    t.boolean  "accept_2"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

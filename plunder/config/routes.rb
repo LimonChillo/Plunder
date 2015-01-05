@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
   resources :articles
 
-  #get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
- 
+  #get 'articles/matches/:state/:action' =>'articles#matches', :as => "matches_article_with_params"
+  get 'articles/matches/' =>'articles#matches', :as => "matches_article_with_params"
+
   #match "/matches/:id" => "articles#matches"
   #get 'articles/random' => 'articles#random'
 

@@ -119,6 +119,32 @@ class ArticlesController < ApplicationController
           # else
           #   state = "null"
           # end
+          actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
+
+            if actualExchange.user_1 == current_user
+              user_1 = actualExchange.user_1
+              user_2 = actualExchange.user_2
+            else
+              user_1 = actualExchange.user_2
+              user_2 = actualExchange.user_1
+            end
+
+          if actualExchange.accept_1 == true && actualExchange.accept_2 == nil
+            state = "iAccepted"
+          elsif actualExchange.accept_2 == true && actualExchange.accept_1 == nil
+            state = "accepted"
+          elsif actualExchange.accept_1 == false && actualExchange.accept_2 == nil
+            state = "iRejected"
+          elsif actualExchange.accept_2 == false && actualExchange.accept_2 == nil
+            state = "rejected"
+          elsif actualExchange.accept_1 == true && actualExchange.accept_2 == true
+            state = "bothAccepted"
+          elsif actualExchange.accept_1 == false && actualExchange.accept_2 == false
+            state = "bothRejected"
+          else
+            state = "neutral"
+          end
+
 
           #----------------------------------------
 
