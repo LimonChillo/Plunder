@@ -38,6 +38,31 @@ class ArticlesController < ApplicationController
   end
 
 
+  def goBack
+    session[:return_to] ||= request.referer
+    redirect_to session.delete(:return_to)
+  end
+
+  def addExchangeItems (currentMatch)
+    # get my Articles that the other user liked
+    userOfMatch = Article.where(:id => currentMatch.favorite_id).first.pluck(:user_id)
+    matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
+    myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
+
+    if myMatchedArticlesByOtherUser => nil
+      goBack
+    end
+
+    # get the other user's Articles I liked
+    myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
+    otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
+
+    if otherUsersArticlesILiked => nil
+      goBack
+    end
+
+
+  end
 
   def matches
 
@@ -92,9 +117,10 @@ class ArticlesController < ApplicationController
       myMatches.each do |my|
         otherMatches.each do |other|
 
-          
+
 
           #---------- State Handling ---------------------------
+
           actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
 
             # Feststellung welcher User ich bin, und welcher der andere ist.
@@ -105,7 +131,7 @@ class ArticlesController < ApplicationController
               user_1 = actualExchange.user_2
               user_2 = actualExchange.user_1
             end
-          
+
           # setzen der states
           if actualExchange.accept_1 == true && actualExchange.accept_2 == nil
             state = "iAccepted"
@@ -116,12 +142,13 @@ class ArticlesController < ApplicationController
           elsif actualExchange.accept_2 == false && actualExchange.accept_2 == nil
             state = "rejected"
           elsif actualExchange.accept_1 == true && actualExchange.accept_2 == true
-            state = "bothAccepted"  
+            state = "bothAccepted"
           elsif actualExchange.accept_1 == false && actualExchange.accept_2 == false
             state = "bothRejected"
           else
             state = "neutral"
-          end  
+          end
+
 
           #----------------------------------------
           # Weitergabe des Matching Paares als Hash
@@ -168,6 +195,25 @@ class ArticlesController < ApplicationController
     #@random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id ").all.distinct #.order("RANDOM()")
 
   end
+
+  def like
+    # favorite Others article and like it
+    current_user.favorites << Article.find(params[:id])
+    currentMatch = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
+    currentMatch.like = true
+    currentMatch.save
+
+
+    #add Exchange Items
+    addExchangeItems currentMatch
+
+
+
+
+    goBack
+  end
+
+
 
   private
     def set_article
