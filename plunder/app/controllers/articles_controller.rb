@@ -37,16 +37,11 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
-  # FAV
-  # def matches
-  #   @matches = Article.find_by_id(params[:id]).partners.all
-  # end
-
   def matches
-    currentUser = params[:id]
-    ownProducts = Article.where(:user_id => currentUser)
+    @currentUser = params[:id]
+    ownProducts = Article.where(:user_id => @currentUser)
 
-    likedFavoriteIds = Match.where(:like => true, :user_id => currentUser).pluck(:favorite_id)
+    likedFavoriteIds = Match.where(:like => true, :user_id => @currentUser).pluck(:favorite_id)
     favoritedProducts = Article.where(:id => likedFavoriteIds)
     favoritedUsers = User.joins(:articles).where(:articles => {:id => favoritedProducts}).distinct
 
@@ -61,10 +56,46 @@ class ArticlesController < ApplicationController
 
 
     @matches = matchedUsers
+
+    @matchedUsers = (favoritedUsers & likeingUser)
+
+    #productsFromMatchedUser = Article.joins(:users).where(:user => {:id => @matchedUsers})
+
+    @matches = []
+
+    @matchedUsers.each do |matchedUser|
+
+      productsFromMatchedUser = Article.where(:user_id => matchedUser)
+
+      likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
+      likeingProducts = Article.where(:id => likeingFavoriteIds)
+
+      myMatches = (productsFromMatchedUser & favoritedProducts)
+
+      otherMatches = (ownProducts & likeingProducts)
+
+      array = []
+
+      myMatches.each do |my|
+        otherMatches.each do |other|
+
+          hash = { :other => my, :my => other}
+          array.push(hash)
+
+        end
+      end
+
+      @matches.push(array)
+
+    end
+
+
+
   end
 
   def random
     @random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id").where.not(:user_id => current_user.id).order("RANDOM()").first
+
   end
 
   private

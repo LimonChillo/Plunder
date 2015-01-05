@@ -1,3 +1,9 @@
-<% @matches.each do |match| %>
-    <%= match.email %>
-<% end %>
+<div class="container-fluid">   
+    <% @matches.each do |user| %>
+        <div class="row matchesUser">
+            <%= render "matchesUser", :user => user %>
+        </div>
+    <% end %>
+</div>
+
+    
