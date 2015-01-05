@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150105141735) do
+ActiveRecord::Schema.define(version: 20150105190930) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "name"
@@ -25,10 +25,10 @@ ActiveRecord::Schema.define(version: 20150105141735) do
   create_table "exchanges", force: :cascade do |t|
     t.integer  "article_id_1"
     t.integer  "article_id_2"
-    t.boolean  "user_1"
-    t.boolean  "user_2"
-    t.boolean  "accept_1"
-    t.boolean  "accept_2"
+    t.integer  "user_1"
+    t.integer  "user_2"
+    t.integer  "accept_1"
+    t.integer  "accept_2"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
