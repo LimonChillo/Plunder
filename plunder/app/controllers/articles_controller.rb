@@ -37,6 +37,32 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
+  def goBack
+    session[:return_to] ||= request.referer
+    redirect_to session.delete(:return_to)
+  end
+
+  def addExchangeItems (currentMatch)
+    # get my Articles that the other user liked
+    userOfMatch = Article.where(:id => currentMatch.favorite_id).first.pluck(:user_id)
+    matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
+    myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
+
+    if myMatchedArticlesByOtherUser => nil
+      goBack
+    end
+
+    # get the other user's Articles I liked
+    myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
+    otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
+
+    if otherUsersArticlesILiked => nil
+      goBack
+    end
+
+
+  end
+
   def matches
 
     #@currentUser = params[:id]
@@ -81,7 +107,7 @@ class ArticlesController < ApplicationController
       myMatches.each do |my|
         otherMatches.each do |other|
 
-          
+
 
           #----------------------------------------
           # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
@@ -92,7 +118,7 @@ class ArticlesController < ApplicationController
           #   state = "rejectet"
           # else
           #   state = "null"
-          # end  
+          # end
 
           #----------------------------------------
 
@@ -123,9 +149,23 @@ class ArticlesController < ApplicationController
   end
 
   def like
+    # favorite Others article and like it
+    current_user.favorites << Article.find(params[:id])
+    currentMatch = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
+    currentMatch.like = true
+    currentMatch.save
 
-    @article = Article.find(params[:id])
+
+    #add Exchange Items
+    addExchangeItems currentMatch
+
+
+
+
+    goBack
   end
+
+
 
   private
     def set_article
