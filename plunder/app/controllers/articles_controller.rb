@@ -154,7 +154,7 @@ class ArticlesController < ApplicationController
           elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3
             state = "iRejected"
           elsif actualExchange.accept_2 == 2 && actualExchange.accept_2 == 3
-            state = "rejected"+
+            state = "rejected"
           elsif actualExchange.accept_1 == 1 && actualExchange.accept_2 == 1
             state = "bothAccepted"
           elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 2
@@ -228,10 +228,6 @@ class ArticlesController < ApplicationController
         actualExchange.update_attribute(:accept_1 => 3)
       end
     when "neutral"
-<<<<<<< HEAD
-
-    else
-=======
       if action == "yes"
         actualExchange.update_attribute(:accept_1 => 1)
       else
@@ -239,7 +235,6 @@ class ArticlesController < ApplicationController
       end
 
     else
->>>>>>> 2ae39f131625daf0818d5f116f4451f155f0156f
     end
 
   session[:return_to] ||= request.referer
