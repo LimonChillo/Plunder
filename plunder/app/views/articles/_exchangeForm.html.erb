@@ -1,0 +1,30 @@
+<% if state == "accepted" %>
+
+	<%= link_to matches_article_path(:id1 => id1, :id2 => id2, :user2 => current_user.id), class: "btn btn-success" do %>
+	    <i class="glyphicon glyphicon-refresh">Accept</i>
+	<% end %> 
+
+	<%= link_to matches_article_path(:id => param), class: "btn btn-danger btn-xs" do %>
+	    <i class="glyphicon glyphicon-remove">Reject</i>
+	<% end %>
+
+<% elsif state == "rejected" %>
+
+	<h3><span class="label label-danger">Rejected</span></h3>
+
+<% else %>
+
+	<%= link_to matches_article_path(:id1 => id1, :id2 => id2, :id1 => id1, :id1 => id1), class: "btn btn-primary" do %>
+	    <i class="glyphicon glyphicon-refresh">Exchange</i>
+	<% end %> 
+
+	<%= link_to matches_article_path(:id => param), class: "btn btn-danger btn-xs" do %>
+	    <i class="glyphicon glyphicon-remove">Reject</i>
+	<% end %>
+
+<% end %>
+
+
+
+
+
