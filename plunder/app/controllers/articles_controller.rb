@@ -121,29 +121,30 @@ class ArticlesController < ApplicationController
 
           #---------- State Handling ---------------------------
 
-          actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
+          # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
 
-            # Feststellung welcher User ich bin, und welcher der andere ist.
-            if actualExchange.user_1 == current_user
-              user_1 = actualExchange.user_1
-              user_2 = actualExchange.user_2
-            else
-              user_1 = actualExchange.user_2
-              user_2 = actualExchange.user_1
-            end
+          #   # Feststellung welcher User ich bin, und welcher der andere ist.
+          #   if actualExchange.user_1 == current_user
+          #     user_1 = actualExchange.user_1
+          #     user_2 = actualExchange.user_2
+          #   else
+          #     user_1 = actualExchange.user_2
+          #     user_2 = actualExchange.user_1
+          #   end
+          actualExchange = actualExchangeMethod my.id other.id
 
           # setzen der states
-          if actualExchange.accept_1 == true && actualExchange.accept_2 == nil
+          if actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3
             state = "iAccepted"
-          elsif actualExchange.accept_2 == true && actualExchange.accept_1 == nil
+          elsif actualExchange.accept_2 == 1 && actualExchange.accept_1 == 3 
             state = "accepted"
-          elsif actualExchange.accept_1 == false && actualExchange.accept_2 == nil
+          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3
             state = "iRejected"
-          elsif actualExchange.accept_2 == false && actualExchange.accept_2 == nil
-            state = "rejected"
-          elsif actualExchange.accept_1 == true && actualExchange.accept_2 == true
+          elsif actualExchange.accept_2 == 2 && actualExchange.accept_2 == 3
+            state = "rejected"+
+          elsif actualExchange.accept_1 == 1 && actualExchange.accept_2 == 1
             state = "bothAccepted"
-          elsif actualExchange.accept_1 == false && actualExchange.accept_2 == false
+          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 2
             state = "bothRejected"
           else
             state = "neutral"
@@ -163,26 +164,67 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def actualExchangeMethod (my_id, other_id)
+
+    actualExchange = Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id])
+
+    # Feststellung welcher User ich bin, und welcher der andere ist. Membervariablen werden Klassenweit geändert
+    # if actualExchange.user_1 == current_user
+    #   @user_1 = actualExchange.user_1
+    #   @user_2 = actualExchange.user_2
+    # else
+    #   @user_1 = actualExchange.user_2
+    #   @user_2 = actualExchange.user_1
+    # end
+    
+    # return actualExchange
+
+  end
+
   # Führt je nach Status und gedrückten Button, Datenbankoperationen aus 
   def exchangeHandler 
     action = params[:action]
     state = params[:state]
+    id1 = params[:id1] 
+    id2 = params[:id2]
+
+    actualExchange = actualExchangeMethod id1 id2
 
     case state
     when "accepted"
-
+      if action == "yes"
+        actualExchange.update_attribute(:accept_2 => 1)
+      else
+        actualExchange.update_attribute(:accept_2 => 2)
+      end
     when "rejected"
-
+      # Remove Match
+      # IMPLEMENT
     when "iAccepted"
-
+      # Undo Acception
+      actualExchange.update_attribute(:accept_1 => 3)
     when "iRejected"
-
+      # Undo Rejection
+      actualExchange.update_attribute(:accept_1 => 3)
     when "bothAccepted"
-
+      if action == "yes"
+        #IMPLEMENT
+      else
+        actualExchange.update_attribute(:accept_1 => 3)
+      end
     when "neutral"
-
+      if action == "yes"
+        actualExchange.update_attribute(:accept_1 => 1)
+      else
+        actualExchange.update_attribute(:accept_1 => 2)
+      end
+    
     else  
     end
+
+  session[:return_to] ||= request.referer
+  redirect_to session.delete(:return_to)
+
   end
 
 
