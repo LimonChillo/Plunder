@@ -1,10 +1,10 @@
 <% if state == "accepted" %>
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => yes), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => yes), class: "btn btn-success" do %>
 	    <i class="glyphicon glyphicon-ok">Accept</i>
 	<% end %> 
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Reject</i>
 	<% end %>
 
@@ -12,7 +12,7 @@
 
 	<h3><span class="label label-danger"><i class="glyphicon glyphicon-remove">Rejected</i></span></h3>
 
-	<%= link_to matches_article_with_state_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Remove</i>
 	<% end %>
 
@@ -20,7 +20,7 @@
 	
 	<h3><span class="label label-success"><i class="glyphicon glyphicon-ok">Accepted</i></span></h3>
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Reject</i>
 	<% end %>
 
@@ -28,13 +28,13 @@
 
 	<h3><span class="label label-danger"><i class="glyphicon glyphicon-remove">You Rejected</i></span></h3>
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-repeat">Undo</i>
 	<% end %>
 
 <% elsif state == "bothAccepted" %>
 	
-	<%= link_to matches_article_with_params_path(:state => state, :action => yes), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => yes), class: "btn btn-success" do %>
 	    <i class="glyphicon glyphicon-heart">Both Accepted</i>
 	<% end %> 
 
@@ -45,11 +45,11 @@
 
 <% else %>
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => yes), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => yes), class: "btn btn-success" do %>
 	    <i class="glyphicon glyphicon-refresh">Exchange</i>
 	<% end %> 
 
-	<%= link_to matches_article_with_params_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:state => state, :action => no) class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Reject</i>
 	<% end %>
 
