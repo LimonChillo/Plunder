@@ -12,11 +12,11 @@ u3 = User.create!({:email => "c@c.cc", :password => "11111111", :password_confir
 u4 = User.create!({:email => "c@b.cc", :password => "11111111", :password_confirmation => "11111111" })
 
 
-m = u1.articles.create(name: 'Milch')
-b = u1.articles.create(name: 'Butter')
-e = u2.articles.create(name: 'Eier')
-f = u3.articles.create(name: 'Fleisch')
-s = u3.articles.create(name: 'Saft')
+m = u1.articles.create(name: 'Monitor')
+b = u1.articles.create(name: 'Lego')
+e = u2.articles.create(name: 'Ente')
+f = u3.articles.create(name: 'Hotwheels')
+s = u3.articles.create(name: 'Nudeln')
 
 
 
@@ -30,8 +30,20 @@ u2.favorites << s
 
 u3.favorites << b
 
+
 u4.favorites << s
 u4.favorites << e
 u4.favorites << f
+
+
+u1.favorites << s
+u2.favorites << f
+u3.favorites << m
+u3.favorites << e
+u4.favorites << m
+u4.favorites << b
+
+
+
 
 Match.update_all(:like => true)

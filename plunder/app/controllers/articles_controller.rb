@@ -37,53 +37,56 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
-  # FAV
-  # def matches
-  #   @matches = Article.find_by_id(params[:id]).partners.all
-  # end
-
   def matches
-    currentUser = params[:id]
-    ownProducts = Article.where(:user_id => currentUser)
+    @currentUser = params[:id]
+    ownProducts = Article.where(:user_id => @currentUser)
 
-    likedFavoriteIds = Match.where(:like => true, :user_id => currentUser).pluck(:favorite_id)
+    likedFavoriteIds = Match.where(:like => true, :user_id => @currentUser).pluck(:favorite_id)
     favoritedProducts = Article.where(:id => likedFavoriteIds)
     favoritedUsers = User.joins(:articles).where(:articles => {:id => favoritedProducts}).distinct
 
     likeingUsersIds = Match.where(:like => true, :favorite_id => ownProducts).pluck(:user_id)
     likeingUser = User.where(:id => likeingUsersIds)
+
     
-    #producstFromLikingUser = Article.join(:users).where(:user => {:id => likeingUsersIds}).all
+    @matchedUsers = (favoritedUsers & likeingUser)
 
-    matchedUsers = (favoritedUsers & likeingUser)
+    #productsFromMatchedUser = Article.joins(:users).where(:user => {:id => @matchedUsers})
 
-    producstFromMatchedUser = Article.joins(:users).where(:user => {:id => matchedUsers})
+    @matches = []
 
+    @matchedUsers.each do |matchedUser|
 
+      productsFromMatchedUser = Article.where(:user_id => matchedUser)
 
+      likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
+      likeingProducts = Article.where(:id => likeingFavoriteIds)
 
+      myMatches = (productsFromMatchedUser & favoritedProducts)
 
+      otherMatches = (ownProducts & likeingProducts)
 
+      array = []
 
+      myMatches.each do |my|
+        otherMatches.each do |other|
 
+          hash = { :other => my, :my => other}
+          array.push(hash)
+
+        end
+      end
+
+      @matches.push(array)
+
+    end
+
+    
+
+  end
 
   def random
     @random_article = Article.where.not(:user_id => current_user).first
-  end
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @matches = matchedUsers
   end
 
   private
