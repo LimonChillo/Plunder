@@ -103,6 +103,11 @@ class ArticlesController < ApplicationController
 
   end
 
+  def like
+
+    @article = Article.find(params[:id])
+  end
+
   private
     def set_article
       @article = Article.find(params[:id])

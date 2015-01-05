@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   get 'articles/random' => 'articles#random'
+  get 'articles/like/:id' => 'articles#like', :as => "like_article"
   resources :articles
 
   get 'articles/matches/:id' =>'articles#matches', :as => "matches_article"
