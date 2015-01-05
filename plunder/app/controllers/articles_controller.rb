@@ -44,11 +44,12 @@ class ArticlesController < ApplicationController
 
   def addExchangeItems (currentMatch)
     # get my Articles that the other user liked
-    userOfMatch = Article.where(:id => currentMatch.favorite_id).first.pluck(:user_id)
+    userOfMatch = Article.where(:id => currentMatch.favorite_id).pluck(:user_id).first
     matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
     myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
 
-    if myMatchedArticlesByOtherUser => nil
+    # if other User has not liked any of my Articles go back
+    if myMatchedArticlesByOtherUser == nil
       goBack
     end
 
@@ -56,10 +57,22 @@ class ArticlesController < ApplicationController
     myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
     otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
 
-    if otherUsersArticlesILiked => nil
+    # if I have not liked any of Other's Articles go back
+    if otherUsersArticlesILiked == nil
       goBack
     end
 
+    # iterate through my Articles combine with the Other's i just liked
+    myMatchedArticlesByOtherUser.each do |myArticle|
+      Exchange.create(
+                      :article_id_1 => myArticle.id,
+                      :article_id_2 => currentMatch.favorite_id,
+                      :user_1 => current_user.id,
+                      :user_2 => userOfMatch,
+                      :accept_1 => 3,
+                      :accept_2 => 3
+                      )
+    end
 
   end
 
