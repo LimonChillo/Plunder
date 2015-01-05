@@ -50,7 +50,15 @@ class ArticlesController < ApplicationController
     likeingUsersIds = Match.where(:like => true, :favorite_id => ownProducts).pluck(:user_id)
     likeingUser = User.where(:id => likeingUsersIds)
 
-    
+    #producstFromLikingUser = Article.join(:users).where(:user => {:id => likeingUsersIds}).all
+
+    matchedUsers = (favoritedUsers & likeingUser)
+
+    producstFromMatchedUser = Article.joins(:users).where(:user => {:id => matchedUsers})
+
+
+    @matches = matchedUsers
+
     @matchedUsers = (favoritedUsers & likeingUser)
 
     #productsFromMatchedUser = Article.joins(:users).where(:user => {:id => @matchedUsers})
@@ -98,14 +106,20 @@ class ArticlesController < ApplicationController
 
     end
 
-    
+
 
 
 
   end
 
   def random
-    @random_article = Article.where.not(:user_id => current_user).first
+    othersArticles = Article.where.not(:user_id => current_user.id)
+    matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
+
+    @random_article = othersArticles.where.not(:id => matchedByMe).order("RANDOM()").first
+
+    #@random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id ").all.distinct #.order("RANDOM()")
+
   end
 
   private
