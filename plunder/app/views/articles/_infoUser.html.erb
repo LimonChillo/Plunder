@@ -1,6 +1,6 @@
 <%# image_tag "u#{id}.png", :class => 'img-responsive' %>
 <%= image_tag User.find_by_id(id).avatar.url(:thumb), :class => 'avatar' %>
 <br />
-<div class="label label-info username"><%= name %></div>
+<div class="label label-info username center"><%= name %></div>
 <br />
-<span class="label label-info"><%= location %></span>
+<span class="label label-info center"><%= location %></span>
