@@ -5,7 +5,7 @@
     <div class="row matchesArticle <%= "#{match[:state]}" %>">
         <div class="col-md-2 a">
             <% if first %> 
-                <%= render "infoUser", :id => current_user.id, :name => current_user.name, :city => current_user.location%>
+                <%= render "infoUser", :id => current_user.id, :name => current_user.name, :location => current_user.location%>
             <% end %>
         </div>
         <div class="col-md-3 b">
@@ -21,7 +21,7 @@
             <% if first 
                 first = false;
             %>
-                <%= render "infoUser", :id => match[:other].user_id, :name => User.find(match[:other].user_id).name, :city => User.find(match[:other].user_id).location%>
+                <%= render "infoUser", :id => match[:other].user_id, :name => User.find(match[:other].user_id).name, :location => User.find(match[:other].user_id).location%>
             <% end %>
         </div>
     </div>
