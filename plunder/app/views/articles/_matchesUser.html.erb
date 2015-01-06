@@ -4,26 +4,25 @@
 %>
     <div class="row matchesArticle <%= "#{match[:state]}" %>">
         <div class="col-md-2 a">
-            <%= if first 
-                image_tag "u#{@currentUser}.png", :class => 'img-responsive'
-                end   
-            %>
+            <% if first %> 
+                <%= render "infoUser", :id => current_user.id, :name => current_user.name, :city => current_user.city%>
+            <% end %>
         </div>
         <div class="col-md-3 b">
-            <%= image_tag "a#{match[:my].id}.jpg", :class => 'img-responsive'  %>
+            <%= render "infoArticle", :id => match[:my].id, :name => match[:my].name, :shippable => match[:my].shippable%>
         </div>
         <div class="col-md-2 c">
-             <%= render "exchangeForm", :id1 => match[:my].id, :id2 => match[:other].id, :state => match[:state]%>
+            <%= render "articles/states/#{match[:state]}", :id1 => match[:my].id, :id2 => match[:other].id, :state => match[:state] %>
         </div>
         <div class="col-md-3 d">
-            <%= image_tag "a#{match[:other].id}.jpg", :class => 'img-responsive'  %>
+            <%= render "infoArticle", :id => match[:other].id, :name => match[:other].name, :shippable => match[:other].shippable%>
         </div>
         <div class="col-md-2 e">
-            <%= if first 
+            <% if first 
                 first = false;
-                image_tag "u#{match[:other].user_id}.png", :class => 'img-responsive'
-                end   
             %>
+                <%= render "infoUser", :id => match[:other].user_id, :name => User.find(match[:other].user_id).name, :city => User.find(match[:other].user_id).city%>
+            <% end %>
         </div>
     </div>
 <% end %>

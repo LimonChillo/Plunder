@@ -27,10 +27,10 @@ ActiveRecord::Schema.define(version: 20150105190930) do
     t.integer  "article_id_2"
     t.integer  "user_1"
     t.integer  "user_2"
-    t.integer  "accept_1"
-    t.integer  "accept_2"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "user_1_accept"
+    t.string   "user_2_accept"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "identities", force: :cascade do |t|
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20150105190930) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.string   "city"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

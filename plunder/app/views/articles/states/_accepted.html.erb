@@ -1,0 +1,7 @@
+<%= link_to exchange_handler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "yes"), class: "btn btn-success" do %>
+    <i class="glyphicon glyphicon-ok"></i> Accept
+<% end %> 
+<br>
+<%= link_to exchange_handler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
+    <i class="glyphicon glyphicon-remove"></i> Reject
+<% end %>
