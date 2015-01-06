@@ -21,7 +21,6 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    #article_params
     @article = Article.new(article_params.merge(:user_id => current_user.id))
     @article.save
     respond_with(@article)
@@ -30,6 +29,9 @@ class ArticlesController < ApplicationController
   def update
     @article.update(article_params)
     respond_with(@article)
+    @article.avatar = params[:avatar] if params[:avatar] != nil
+    @article.save
+
   end
 
   def destroy
@@ -262,6 +264,6 @@ class ArticlesController < ApplicationController
     end
 
     def article_params
-      params.require(:article).permit(:name, :description, :shippable)
+      params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable)
     end
 end

@@ -14,10 +14,23 @@ body {
   }
 }
 
+a:visited {
+  color: black;
+}
+
+a:hover {
+  background-color: transparent;
+}
+
+
 .button {
 }
 
 a.btn:visited {
 	color: white;
+}
+
+a.btn-default:visited {
+  color: black;
 }
 
