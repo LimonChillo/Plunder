@@ -7,9 +7,10 @@
 }
 
 .c {
-  // background-color: silver;
-  // padding-right: 0;
-  // padding-left: 0;
+
+	a.btn {
+		margin-bottom: 10px;
+	}
 }
 
 .d {
@@ -21,7 +22,29 @@
 }
 
 .matchesUser {
-	border-bottom: 5px solid black;
+	padding: 20px 10px;
+	border-bottom: 2px dashed #777777;
+}
+
+.matchesUser:last-child {
+	border-bottom: none;
+}
+
+.username {
+	font-size: 120%;
+	
+}
+
+.matchesArticle {
+	border-radius: 10px;
+	margin-bottom: 20px;
+	text-align: center;
+	padding: 10px 0;
+
+	img {
+		border-radius: 10px;
+	}
+
 }
 
 .matchesArticle.accepted {
@@ -33,20 +56,25 @@
 }
 
 .matchesArticle.iAccepted {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 255, 0, 0.2);
 }
 
 
 .matchesArticle.iRejected {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 0, 0, 0.2);
 }
 
 
 .matchesArticle.bothAccepted {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 255, 0, 0.5);
 }
 
 
 .matchesArticle.bothRejected {
 	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.info {
+	margin-top: 10px;
+	font-size: 150%;
 }

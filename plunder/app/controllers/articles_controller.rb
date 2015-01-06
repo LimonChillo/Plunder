@@ -37,46 +37,6 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
-
-  def goBack
-    session[:return_to] ||= request.referer
-    redirect_to session.delete(:return_to)
-  end
-
-  def addExchangeItems (currentMatch)
-    # get my Articles that the other user liked
-    userOfMatch = Article.where(:id => currentMatch.favorite_id).pluck(:user_id).first
-    matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
-    myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
-
-    # if other User has not liked any of my Articles go back
-    if myMatchedArticlesByOtherUser == nil
-      goBack
-    end
-
-    # get the other user's Articles I liked
-    myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
-    otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
-
-    # if I have not liked any of Other's Articles go back
-    if otherUsersArticlesILiked == nil
-      goBack
-    end
-
-    # iterate through my Articles combine with the Other's i just liked
-    myMatchedArticlesByOtherUser.each do |myArticle|
-      Exchange.create(
-                      :article_id_1 => myArticle.id,
-                      :article_id_2 => currentMatch.favorite_id,
-                      :user_1 => current_user.id,
-                      :user_2 => userOfMatch,
-                      :accept_1 => 3,
-                      :accept_2 => 3
-                      )
-    end
-
-  end
-
   def matches
 
 
@@ -136,28 +96,22 @@ class ArticlesController < ApplicationController
 
           # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
 
-          #   # Feststellung welcher User ich bin, und welcher der andere ist.
-          #   if actualExchange.user_1 == current_user
-          #     user_1 = actualExchange.user_1
-          #     user_2 = actualExchange.user_2
-          #   else
-          #     user_1 = actualExchange.user_2
-          #     user_2 = actualExchange.user_1
-          #   end
-          actualExchange = actualExchangeMethod my.id other.id
+          # Feststellung welcher User ich bin, und welcher der andere ist.
+        
+          actualExchange = actual_exchange_method my.id, other.id
 
           # setzen der states
-          if actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3
+          if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
             state = "iAccepted"
-          elsif actualExchange.accept_2 == 1 && actualExchange.accept_1 == 3
+          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" 
             state = "accepted"
-          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3
+          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
             state = "iRejected"
-          elsif actualExchange.accept_2 == 2 && actualExchange.accept_2 == 3
+          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" 
             state = "rejected"
-          elsif actualExchange.accept_1 == 1 && actualExchange.accept_2 == 1
+          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "accepted"
             state = "bothAccepted"
-          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 2
+          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "rejected"
             state = "bothRejected"
           else
             state = "neutral"
@@ -177,61 +131,48 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def exchange_handler
 
-  def actualExchangeMethod (my_id, other_id)
-
-    actualExchange = Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id])
-
-    # Feststellung welcher User ich bin, und welcher der andere ist. Membervariablen werden Klassenweit geändert
-    # if actualExchange.user_1 == current_user
-    #   @user_1 = actualExchange.user_1
-    #   @user_2 = actualExchange.user_2
-    # else
-    #   @user_1 = actualExchange.user_2
-    #   @user_2 = actualExchange.user_1
-    # end
-
-    # return actualExchange
-
-  end
-
-  # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
-  def exchangeHandler
-
-    action = params[:action]
+    action = params[:choice]
     state = params[:state]
     id1 = params[:id1]
     id2 = params[:id2]
 
-    actualExchange = actualExchangeMethod id1 id2
+    actualExchange = actual_exchange_method id1, id2
+    
+    if actualExchange.user_1 == current_user.id
+      otherUser = actualExchange.user_2
+    else
+      otherUser = actualExchange.user_1
+    end
 
     case state
     when "accepted"
       if action == "yes"
-        actualExchange.update_attribute(:accept_2 => 1)
+        actualExchange.update_attributes(:user_2_accept => "accepted")
       else
-        actualExchange.update_attribute(:accept_2 => 2)
+        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
       end
     when "rejected"
       # Remove Match
       # IMPLEMENT
     when "iAccepted"
       # Undo Acception
-      actualExchange.update_attribute(:accept_1 => 3)
+      actualExchange.update_attributes(:user_1_accept => "unset")
     when "iRejected"
       # Undo Rejection
-      actualExchange.update_attribute(:accept_1 => 3)
+      actualExchange.update_attributes(:user_1_accept => "unset")
     when "bothAccepted"
       if action == "yes"
         #IMPLEMENT
       else
-        actualExchange.update_attribute(:accept_1 => 3)
+        actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser)
       end
     when "neutral"
       if action == "yes"
-        actualExchange.update_attribute(:accept_1 => 1)
+        actualExchange.update_attributes(:user_1_accept => "accepted", :user_1 => current_user.id, :user_2 => otherUser)
       else
-        actualExchange.update_attribute(:accept_1 => 2)
+        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
       end
 
     else
@@ -241,6 +182,56 @@ class ArticlesController < ApplicationController
   redirect_to session.delete(:return_to)
 
   end
+
+  private 
+
+  def actual_exchange_method(my_id, other_id)
+
+    return Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id]).first
+
+  end
+
+   def go_back
+    session[:return_to] ||= request.referer
+    redirect_to session.delete(:return_to)
+  end
+
+  def add_exchange_items(current_match)
+    # get my Articles that the other user liked
+    userOfMatch = Article.where(:id => current_match.favorite_id).pluck(:user_id).first
+    matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
+    myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
+
+    # if other User has not liked any of my Articles go back
+    if myMatchedArticlesByOtherUser == nil
+      go_back
+    end
+
+    # get the other user's Articles I liked
+    myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
+    otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
+
+    # if I have not liked any of Other's Articles go back
+    if otherUsersArticlesILiked == nil
+      go_back
+    end
+
+    # iterate through my Articles combine with the Other's i just liked
+    myMatchedArticlesByOtherUser.each do |myArticle|
+      Exchange.create(
+                      :article_id_1 => myArticle.id,
+                      :article_id_2 => current_match.favorite_id,
+                      :user_1 => current_user.id,
+                      :user_2 => userOfMatch,
+                      :user_1_accept => "unset",
+                      :user_2_accept => "unset"
+                      )
+    end
+
+  end
+
+  # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
+  
 
 
   def random
@@ -256,23 +247,20 @@ class ArticlesController < ApplicationController
   def like
     # favorite Others article and like it
     current_user.favorites << Article.find(params[:id])
-    currentMatch = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
-    currentMatch.like = true
-    currentMatch.save
+    current_match = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
+    current_match.like = true
+    current_match.save
 
 
     #add Exchange Items
-    addExchangeItems currentMatch
+    add_exchange_items current_match
 
 
 
 
-    goBack
+    go_back
   end
 
-
-
-  private
     def set_article
       @article = Article.find(params[:id])
     end
