@@ -1,8 +1,8 @@
-u1 = User.create!({:email => "a@a.aa", :password => "11111111", :password_confirmation => "11111111", :name => "Susanne", :city => "Salzburg"})
-u2 = User.create!({:email => "b@b.bb", :password => "11111111", :password_confirmation => "11111111", :name => "Lisa", :city => "Kufstein" })
-u3 = User.create!({:email => "c@c.cc", :password => "11111111", :password_confirmation => "11111111", :name => "Klaus", :city => "Hallein" })
-u4 = User.create!({:email => "d@d.dd", :password => "11111111", :password_confirmation => "11111111", :name => "Dieter", :city => "Innsbruck" })
-u5 = User.create!({:email => "e@e.ee", :password => "11111111", :password_confirmation => "11111111", :name => "Manuel", :city => "" })
+u1 = User.create!({:email => "a@a.aa", :password => "11111111", :password_confirmation => "11111111", :name => "Susanne", :location => "Salzburg"})
+u2 = User.create!({:email => "b@b.bb", :password => "11111111", :password_confirmation => "11111111", :name => "Lisa", :location => "Kufstein" })
+u3 = User.create!({:email => "c@c.cc", :password => "11111111", :password_confirmation => "11111111", :name => "Klaus", :location => "Hallein" })
+u4 = User.create!({:email => "d@d.dd", :password => "11111111", :password_confirmation => "11111111", :name => "Dieter", :location => "Innsbruck" })
+u5 = User.create!({:email => "e@e.ee", :password => "11111111", :password_confirmation => "11111111", :name => "Manuel", :location => "Puch" })
 
 m = u1.articles.create(name: 'Monitor')
 b = u1.articles.create(name: 'Lego', shippable: true)
