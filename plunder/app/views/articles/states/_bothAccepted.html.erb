@@ -1,4 +1,4 @@
-<%= link_to exchange_handler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "yes"), class: "btn btn-success" do %>
+<%= link_to conversations_path(:id1 => current_user.id, :id2 => other_user), :method=> :post, class: "btn btn-success" do %>
     <i class="glyphicon glyphicon-heart"></i> MATCH
 <% end %> 
 <br>

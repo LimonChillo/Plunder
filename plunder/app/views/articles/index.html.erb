@@ -11,15 +11,16 @@
   </thead>
 
   <tbody>
-    <% @articles.where(:user_id => current_user).each do |article| %> <!--where(:name => 'a').-->
+    <% @articles.where(:user_id => current_user).each do |article| %> 
       <tr>
         <td><%= article.name %></td>
         <td><%= article.description %></td>
         <td><%= article.shippable %></td>
-        <td><%= link_to 'Show', article %>
-        <%= link_to 'Edit', edit_article_path(article) %>
-        <%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' } %>
-        <%= link_to 'Matches', matches_article_path(article) %></td>
+        <td>
+          <%= link_to 'Show', article %>
+          <%= link_to 'Edit', edit_article_path(article) %>
+          <%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
       </tr>
     <% end %>
   </tbody>
