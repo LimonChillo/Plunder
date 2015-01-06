@@ -13,6 +13,11 @@
     <%= f.text_field :location, autocomplete: "on" %>
   </div>
 
+  <div class="field">
+    <%= f.file_field :avatar %>
+    <%= image_tag @user.avatar.url(:thumb) %>
+  </div>
+
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>

@@ -1,0 +1,204 @@
+diff --git a/plunder/Gemfile b/plunder/Gemfile
+index 6a7518c..5110825 100644
+--- a/plunder/Gemfile
++++ b/plunder/Gemfile
+@@ -42,6 +42,7 @@ group :development, :test do
+   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+   gem 'spring'
+
++  # ihr habt das haml-Gem inkludiert, verwendet aber kein Haml
+   gem 'haml'
+
+   gem 'devise'
+diff --git a/plunder/app/controllers/articles_controller.rb b/plunder/app/controllers/articles_controller.rb
+index d3bd03b..f419956 100644
+--- a/plunder/app/controllers/articles_controller.rb
++++ b/plunder/app/controllers/articles_controller.rb
+@@ -22,6 +22,7 @@ class ArticlesController < ApplicationController
+
+   def create
+     #article_params
++    # ihr mischt derzeit Ruby 1.8 und Ruby 1.9 Hash-Syntax (:foo => "bar" vs foo: "bar")
+     @article = Article.new(article_params.merge(:user_id => current_user.id))
+     @article.save
+     respond_with(@article)
+@@ -43,8 +44,15 @@ class ArticlesController < ApplicationController
+     redirect_to session.delete(:return_to)
+   end
+
++  # Methoden in einem Controller, die keine Actions sind, sollten alle zusammen unter den actions stehen und protected oder private sein
++  # ansonsten: ihr habt hier schon viel Code, allerdings an der falschen Stelle. Der Controller sollte schlank bleiben und keine Business-Logik
++  # enthalten (fat model, skinny controller). Dazu sind die Methoden auch noch sehr lang und vermischen Verantwortlichkeiten (single responsibility
++  # principle). Viele Kommentare sind notwendig, um die verschiedenen Verantwortlichkeiten in der Methode zu erklären (was selbsterklärend sein
++  # könnte, wenn der Bereich in einer eigenen Methode mit gutem Namen sein würde. Das ist sicherlich zu viel bis zur Präsentation, aber ein guter
++  # Bereich für das Refactoring bis zur zweiten Präsentation.
+   def addExchangeItems (currentMatch)
+     # get my Articles that the other user liked
++    # auch für Variablen gilt: immer underscored statt camelCased
+     userOfMatch = Article.where(:id => currentMatch.favorite_id).pluck(:user_id).first
+     matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
+     myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
+@@ -147,6 +155,8 @@ class ArticlesController < ApplicationController
+           actualExchange = actualExchangeMethod my.id other.id
+
+           # setzen der states
++          # die States sind nicht selbsterklärend, was ist 1,2,3, was ist accept_1/accept_2?
++          # siehe dazu auch: api.rubyonrails.org/classes/ActiveRecord/Enum.html
+           if actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3
+             state = "iAccepted"
+           elsif actualExchange.accept_2 == 1 && actualExchange.accept_1 == 3
+@@ -178,8 +188,12 @@ class ArticlesController < ApplicationController
+   end
+
+
++  # Methoden immer underscored, nicht camelCased: actual_exchange_method
++  # außerdem kein Leerzeichen vor den Argumenten: def actual_exchange_method(my_id, other_id)
++  # unnötige Kommentare und Leerzeilen verschlechtern die Lesbarkeit und sollten entfernt werden
+   def actualExchangeMethod (my_id, other_id)
+
++    # nicht notwendige Variable
+     actualExchange = Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id])
+
+     # Feststellung welcher User ich bin, und welcher der andere ist. Membervariablen werden Klassenweit geändert
+@@ -200,9 +214,10 @@ class ArticlesController < ApplicationController
+
+     action = params[:action]
+     state = params[:state]
+-    id1 = params[:id1]
++    id2 = params[:id1]
+     id2 = params[:id2]
+
++    # da fehlt ein Komma in der Argumentliste!
+     actualExchange = actualExchangeMethod id1 id2
+
+     case state
+@@ -247,6 +262,7 @@ class ArticlesController < ApplicationController
+     othersArticles = Article.where.not(:user_id => current_user.id)
+     matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
+
++    # order RANDOM() wird bei großen Datenmengen *sehr* langsam
+     @random_article = othersArticles.where.not(:id => matchedByMe).order("RANDOM()").first
+
+     #@random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id ").all.distinct #.order("RANDOM()")
+diff --git a/plunder/app/models/user.rb b/plunder/app/models/user.rb
+index 62d373a..44f9a25 100644
+--- a/plunder/app/models/user.rb
++++ b/plunder/app/models/user.rb
+@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
+     user
+   end
+
++  # scheint nicht verwendet zu werden
+   def email_verified?
+     self.email && self.email !~ TEMP_EMAIL_REGEX
+   end
+diff --git a/plunder/app/views/articles/_exchangeForm.html.erb b/plunder/app/views/articles/_exchangeForm.html.erb
+index 05c39ae..9414509 100644
+--- a/plunder/app/views/articles/_exchangeForm.html.erb
++++ b/plunder/app/views/articles/_exchangeForm.html.erb
+@@ -1,3 +1,4 @@
++<!-- statt langer elsif-Ketten könnte jedes Snippet in sein eigenes Partial mit passendem Namen -->
+ <% if state == "accepted" %>
+
+  <%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "yes"), class: "btn btn-success" do %>
+diff --git a/plunder/app/views/articles/_form.html.erb b/plunder/app/views/articles/_form.html.erb
+index becb914..106d4e8 100644
+--- a/plunder/app/views/articles/_form.html.erb
++++ b/plunder/app/views/articles/_form.html.erb
+@@ -1,3 +1,4 @@
++<!-- in partials sollte man keine Instanzvariablen verwenden, besser ist es, dem Partial die Variable als lokale Variable zu übergeben -->
+ <%= form_for(@article) do |f| %>
+   <% if @article.errors.any? %>
+     <div id="error_explanation">
+diff --git a/plunder/app/views/articles/_matchesUser.html.erb b/plunder/app/views/articles/_matchesUser.html.erb
+index ebf9144..5e92802 100644
+--- a/plunder/app/views/articles/_matchesUser.html.erb
++++ b/plunder/app/views/articles/_matchesUser.html.erb
+@@ -1,5 +1,6 @@
+ <%
+     first = true
++    # mehrzeilige erb-Blöcke sind fast immer ein Code-Smell. In diesem Fall könnt ihr das vereinfachen, indem ihr each_with_index verwendet, in anderen Fällen bspw. mit einem Helper.
+     user.each do |match|
+ %>
+     <div class="row matchesArticle <%= "#{match[:state]}" %>">
+@@ -26,4 +27,4 @@
+             %>
+         </div>
+     </div>
+-<% end %>
+\ No newline at end of file
++<% end %>
+diff --git a/plunder/app/views/articles/matches.html.erb b/plunder/app/views/articles/matches.html.erb
+index 71fb141..efd3dc1 100644
+--- a/plunder/app/views/articles/matches.html.erb
++++ b/plunder/app/views/articles/matches.html.erb
+@@ -5,5 +5,6 @@
+         </div>
+     <% end %>
+ </div>
++<!-- "trailing whitespace", also Leerzeichen am Ende der Zeile oder der Datei, sollten entfernt werden
+
+-
+\ No newline at end of file
++
+diff --git a/plunder/config/routes.rb b/plunder/config/routes.rb
+--- a/plunder/config/routes.rb
++++ b/plunder/config/routes.rb
+@@ -1,5 +1,17 @@
+ Rails.application.routes.draw do
+
++  # die nächsten vier Zeilen können direkt in der resource beschrieben werden:
++  # resources :articles do
++  #   collection do
++  #     get :matches
++  #     get :random
++  #   end
++  #
++  #   member do
++  #     get :like
++  #   end
++  # end
++  # usw.
+   get 'articles/matches' =>'articles#matches', :as => "matches_article"
+   get 'articles/random' => 'articles#random', :as => "random_article"
+   get 'articles/like/:id' => 'articles#like', :as => "like_article"
+@@ -8,6 +20,7 @@ Rails.application.routes.draw do
+   resources :articles
+
+   #get 'articles/matches/:state/:action' =>'articles#matches', :as => "matches_article_with_params"
++  # siehe oberen Kommentar
+   post 'articles/exchangeHandler' =>'articles#exchangeHandler', :as => "matches_exchangeHandler"
+
+   #match "/matches/:id" => "articles#matches"
+@@ -33,6 +46,8 @@ Rails.application.routes.draw do
+ end
+
+
++  # Kommentare entfernen, sind für eure App nicht mehr relevant
++  # (auch die meisten Kommentare weiter oben)
+   # Example of regular route:
+   #   get 'products/:id' => 'catalog#view'
+
+diff --git a/plunder/db/schema.rb b/plunder/db/schema.rb
+index 88e3b2e..9be5039 100644
+--- a/plunder/db/schema.rb
++++ b/plunder/db/schema.rb
+@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20150105205711) do
+   end
+
+   create_table "identities", force: :cascade do |t|
++    # Index nicht vergessen (für alle foreign keys)!
+     t.integer  "user_id"
+     t.string   "provider"
+     t.string   "uid"
+diff --git a/plunder/test/fixtures/matches.yml b/plunder/test/fixtures/matches.yml
+index 85ad88a..534ca28 100644
+--- a/plunder/test/fixtures/matches.yml
++++ b/plunder/test/fixtures/matches.yml
+@@ -1,6 +1,7 @@
+ # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+ one:
++  # Spalten in der DB nicht vorhanden, Tests laufen daher überhaupt nicht
+   product_id: 1
+   partner_id: 1
