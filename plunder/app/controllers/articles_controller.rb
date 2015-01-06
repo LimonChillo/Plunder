@@ -37,8 +37,32 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
-  def matches
 
+
+  def random
+    othersArticles = Article.where.not(:user_id => current_user.id)
+    matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
+
+    @random_article = othersArticles.where.not(:id => matchedByMe).order("RANDOM()").first
+
+  end
+
+  def like
+    # favorite Others article and like it
+    current_user.favorites << Article.find(params[:id])
+    if params[:choice] == "yes"
+      current_match = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
+      current_match.like = true
+      current_match.save
+
+      #add Exchange Items
+      add_exchange_items current_match
+    end
+
+    go_back
+  end
+
+  def matches
 
     @currentUser = current_user.id
     # Alle eigenen Artikel
@@ -97,17 +121,17 @@ class ArticlesController < ApplicationController
           # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
 
           # Feststellung welcher User ich bin, und welcher der andere ist.
-        
+
           actualExchange = actual_exchange_method my.id, other.id
 
           # setzen der states
           if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
             state = "iAccepted"
-          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" 
+          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset"
             state = "accepted"
           elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
             state = "iRejected"
-          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" 
+          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset"
             state = "rejected"
           elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "accepted"
             state = "bothAccepted"
@@ -139,7 +163,7 @@ class ArticlesController < ApplicationController
     id2 = params[:id2]
 
     actualExchange = actual_exchange_method id1, id2
-    
+
     if actualExchange.user_1 == current_user.id
       otherUser = actualExchange.user_2
     else
@@ -183,7 +207,7 @@ class ArticlesController < ApplicationController
 
   end
 
-  private 
+  private
 
   def actual_exchange_method(my_id, other_id)
 
@@ -231,35 +255,7 @@ class ArticlesController < ApplicationController
   end
 
   # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
-  
 
-
-  def random
-    othersArticles = Article.where.not(:user_id => current_user.id)
-    matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
-
-    @random_article = othersArticles.where.not(:id => matchedByMe).order("RANDOM()").first
-
-    #@random_article = Article.joins("LEFT OUTER JOIN matches ON articles.id = matches.favorite_id ").all.distinct #.order("RANDOM()")
-
-  end
-
-  def like
-    # favorite Others article and like it
-    current_user.favorites << Article.find(params[:id])
-    current_match = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
-    current_match.like = true
-    current_match.save
-
-
-    #add Exchange Items
-    add_exchange_items current_match
-
-
-
-
-    go_back
-  end
 
     def set_article
       @article = Article.find(params[:id])

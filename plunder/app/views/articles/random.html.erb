@@ -21,15 +21,15 @@
           <%= @random_article.shippable %>
         </p>
 
-        <button>Like</button>
-        <button>Nope</button>
-        <%= link_to 'Like', like_article_path(:id => @random_article.id) %>
+        <%= link_to 'Can I has?', like_article_path(:id => @random_article.id, :choice => "yes"), :class => 'btn btn-success' %>
+        <%= link_to 'Nope', like_article_path(:id => @random_article.id, :choice => "no"), :class => 'btn btn-danger' %>
 
       <% else %>
         <h2> There are no Articles you have not seen yet :(</h2>
         <br />
         <%= link_to 'Check again', random_article_path, :class => 'btn btn-default center-block' %>
       <% end %>
+    </div>
 </div>
 <%# link_to 'Edit', edit_article_path(@article) %>
 <%# link_to 'Back', articles_path %>

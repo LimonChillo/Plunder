@@ -34,7 +34,7 @@
 
 .username {
 	font-size: 120%;
-	
+	margin-top: 10px;
 }
 
 .matchesArticle {
@@ -79,4 +79,16 @@
 .info {
 	margin-top: 10px;
 	font-size: 150%;
+	.glyphicon {
+		top: 5px;
+	}
+}
+
+.avatar {
+	margin-bottom: 10px;
+}
+
+.center {
+	text-align: center;
+	margin: auto;
 }
