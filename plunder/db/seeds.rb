@@ -49,9 +49,14 @@ u5.favorites << b
 Exchange.create(:article_id_1 => 1, :article_id_2 => 3, :user_1 => 1, :user_2 => 2, :accept_1 => 3, :accept_2 => 3)
 Exchange.create(:article_id_1 => 2, :article_id_2 => 3, :user_1 => 1, :user_2 => 2, :accept_1 => 3, :accept_2 => 3)
 
+Exchange.create(:article_id_1 => 4, :article_id_2 => 3, :user_1 => 3, :user_2 => 2, :accept_1 => 3, :accept_2 => 3)
+Exchange.create(:article_id_1 => 5, :article_id_2 => 3, :user_1 => 3, :user_2 => 2, :accept_1 => 3, :accept_2 => 3)
+
 Exchange.create(:article_id_1 => 1, :article_id_2 => 4, :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)
 Exchange.create(:article_id_1 => 2, :article_id_2 => 4, :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)
 Exchange.create(:article_id_1 => 1, :article_id_2 => 5, :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)
+Exchange.create(:article_id_1 => 2, :article_id_2 => 5, :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)
+
 
 #xchange.create(:article_id_1 => 5, :article_id_2 => 3, :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)
 #Exchange.create(:article_id_1 => , :article_id_2 => , :user_1 => 1, :user_2 => 3, :accept_1 => 3, :accept_2 => 3)

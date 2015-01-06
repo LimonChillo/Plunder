@@ -1,46 +1,51 @@
 <% if state == "accepted" %>
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "yes"), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "yes"), class: "btn btn-success" do %>
 	    <i class="glyphicon glyphicon-ok">Accept</i>
 	<% end %> 
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Reject</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% elsif state == "rejected" %>
 
 	<h3><span class="label label-danger"><i class="glyphicon glyphicon-remove">Rejected</i></span></h3>
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Remove</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% elsif state == "iAccepted" %>
 	
 	<h3><span class="label label-success"><i class="glyphicon glyphicon-ok">You Accepted</i></span></h3>
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-repeat">Undo</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% elsif state == "iRejected" %>
 
 	<h3><span class="label label-danger"><i class="glyphicon glyphicon-remove">You Rejected</i></span></h3>
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-repeat">Undo</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% elsif state == "bothAccepted" %>
 	
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "yes"), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "yes"), class: "btn btn-success" do %>
 	    <i class="glyphicon glyphicon-heart">Both Accepted</i>
 	<% end %> 
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-repeat">Undo</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% elsif state == "bothRejected" %>
 	<!-- existiert eventuell nicht -->
@@ -49,13 +54,14 @@
 
 <% else %>
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "yes"), class: "btn btn-success" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "yes"), class: "btn btn-primary" do %>
 	    <i class="glyphicon glyphicon-refresh">Exchange</i>
 	<% end %> 
 
-	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :action => "no") class: "btn btn-danger btn-xs" do %>
+	<%= link_to exchangeHandler_path(:id1 => id1, :id2 => id2, :state => state, :choice => "no"), class: "btn btn-danger btn-xs" do %>
 	    <i class="glyphicon glyphicon-remove">Reject</i>
 	<% end %>
+	<p><%= state %></p>
 
 <% end %>
 

@@ -137,23 +137,25 @@ class ArticlesController < ApplicationController
           # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
 
           #   # Feststellung welcher User ich bin, und welcher der andere ist.
-          #   if actualExchange.user_1 == current_user
-          #     user_1 = actualExchange.user_1
-          #     user_2 = actualExchange.user_2
-          #   else
-          #     user_1 = actualExchange.user_2
-          #     user_2 = actualExchange.user_1
-          #   end
-          actualExchange = actualExchangeMethod my.id other.id
+        
+          actualExchange = actualExchangeMethod my.id, other.id
+
+          #if actualExchange.user_1 == current_user
+          #  user_1 = actualExchange.user_1
+          #  user_2 = actualExchange.user_2
+          #else
+          #  user_1 = actualExchange.user_2
+          #  user_2 = actualExchange.user_1
+          #end
 
           # setzen der states
-          if actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3
+          if actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3 && actualExchange.user_1 == current_user.id
             state = "iAccepted"
-          elsif actualExchange.accept_2 == 1 && actualExchange.accept_1 == 3
+          elsif actualExchange.accept_1 == 1 && actualExchange.accept_2 == 3 
             state = "accepted"
-          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3
+          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3 && actualExchange.user_1 == current_user.id
             state = "iRejected"
-          elsif actualExchange.accept_2 == 2 && actualExchange.accept_2 == 3
+          elsif actualExchange.accept_1 == 2 && actualExchange.accept_2 == 3 
             state = "rejected"
           elsif actualExchange.accept_1 == 1 && actualExchange.accept_2 == 1
             state = "bothAccepted"
@@ -180,7 +182,7 @@ class ArticlesController < ApplicationController
 
   def actualExchangeMethod (my_id, other_id)
 
-    actualExchange = Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id])
+    actualExchange = Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id]).first
 
     # Feststellung welcher User ich bin, und welcher der andere ist. Membervariablen werden Klassenweit geändert
     # if actualExchange.user_1 == current_user
@@ -191,47 +193,53 @@ class ArticlesController < ApplicationController
     #   @user_2 = actualExchange.user_1
     # end
 
-    # return actualExchange
+    return actualExchange
 
   end
 
   # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
   def exchangeHandler
 
-    action = params[:action]
+    action = params[:choice]
     state = params[:state]
     id1 = params[:id1]
     id2 = params[:id2]
 
-    actualExchange = actualExchangeMethod id1 id2
+    actualExchange = actualExchangeMethod id1, id2
+    
+    if actualExchange.user_1 == current_user.id
+      otherUser = actualExchange.user_2
+    else
+      otherUser = actualExchange.user_1
+    end
 
     case state
     when "accepted"
       if action == "yes"
-        actualExchange.update_attribute(:accept_2 => 1)
+        actualExchange.update_attributes(:accept_2 => 1)
       else
-        actualExchange.update_attribute(:accept_2 => 2)
+        actualExchange.update_attributes(:accept_1 => 2, :user_1 => current_user.id, :user_2 => otherUser)
       end
     when "rejected"
       # Remove Match
       # IMPLEMENT
     when "iAccepted"
       # Undo Acception
-      actualExchange.update_attribute(:accept_1 => 3)
+      actualExchange.update_attributes(:accept_1 => 3)
     when "iRejected"
       # Undo Rejection
-      actualExchange.update_attribute(:accept_1 => 3)
+      actualExchange.update_attributes(:accept_1 => 3)
     when "bothAccepted"
       if action == "yes"
         #IMPLEMENT
       else
-        actualExchange.update_attribute(:accept_1 => 3)
+        actualExchange.update_attributes(:accept_1 => 2, :accept_2 => 3, :user_1 => current_user.id, :user_2 => otherUser)
       end
     when "neutral"
       if action == "yes"
-        actualExchange.update_attribute(:accept_1 => 1)
+        actualExchange.update_attributes(:accept_1 => 1, :user_1 => current_user.id, :user_2 => otherUser)
       else
-        actualExchange.update_attribute(:accept_1 => 2)
+        actualExchange.update_attributes(:accept_1 => 2, :user_1 => current_user.id, :user_2 => otherUser)
       end
 
     else

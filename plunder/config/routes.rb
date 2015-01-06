@@ -5,10 +5,12 @@ Rails.application.routes.draw do
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
   get 'articles/index' => 'articles#index', :as => "index"
 
+  get 'articles/exchangeHandler' =>'articles#exchangeHandler', :as => "exchangeHandler"
+
+
   resources :articles
 
   #get 'articles/matches/:state/:action' =>'articles#matches', :as => "matches_article_with_params"
-  post 'articles/exchangeHandler' =>'articles#exchangeHandler', :as => "matches_exchangeHandler"
 
   #match "/matches/:id" => "articles#matches"
   #get 'articles/random' => 'articles#random'
