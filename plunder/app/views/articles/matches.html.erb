@@ -1,9 +1,23 @@
-<div class="container-fluid">   
-    <% @matches.each do |user| %>
+<div class="container-fluid">
+    <%
+      if @matches.any?
+        @matches.each do |user| %>
         <div class="row matchesUser">
             <%= render "matchesUser", :user => user %>
         </div>
-    <% end %>
+    <%
+        end
+      else
+    %>
+      <div class="row randomArticle">
+        <div class="col-md-4 col-md-offset-4">
+          <h2> You have no Matches yet :(</h2>
+          <br />
+          <%= link_to 'Check again', matches_article_path, :class => 'btn btn-default center-block' %>
+        </div>
+      </div>
+    <%
+      end
+    %>
 </div>
 
-    
