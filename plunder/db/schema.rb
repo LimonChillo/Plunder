@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20150107003620) do
 
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
+
   create_table "matches", force: :cascade do |t|
     t.integer  "favorite_id"
     t.integer  "user_id"

@@ -1,6 +1,5 @@
 class Article < ActiveRecord::Base
-  has_many :matches
-
+  has_many :matches, :dependent => :destroy
   has_many :users, :through => :matches
   belongs_to :user
 
@@ -25,4 +24,9 @@ class Article < ActiveRecord::Base
   # end
   validates :name,
             :presence => true
+
+  validates :description,
+            :format => { :without => /<(.|\n)*?>/,
+                       :message => 'No HTML Tags allowed in description. ' }
+
 end
