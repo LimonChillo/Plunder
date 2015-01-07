@@ -5,11 +5,9 @@
         <div class="randomImg">
           <%= image_tag @random_article.avatar.url(:medium), :class => 'img-responsive'  %>
         </div>
-        <p>
-          <strong>
-            <%= @random_article.name %>
-          </strong>
-        </p>
+        <h1>
+          <%= @random_article.name %>
+        </h1>
 
         <p>
           <strong>Description:</strong>

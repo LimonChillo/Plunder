@@ -1,4 +1,4 @@
-<%= image_tag Article.find(id).avatar.url(:medium), :class => 'img-responsive'  %>
+<%= link_to( image_tag(Article.find(id).avatar.url(:medium), :class => 'img-responsive'), article_path(id))  %>
 <div class="info">
     <span class="label label-info"><%= name %></span>
     <%= render "shippable", :shippable => shippable%>
