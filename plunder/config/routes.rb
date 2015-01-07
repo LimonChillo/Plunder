@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'articles/matches' =>'articles#matches', :as => "matches_article"
   get 'articles/random' => 'articles#random', :as => "random_article"
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
+  post 'articles/:id/edit' => 'articles#edit', :as => "edit_article"
   patch 'articles/crop/:id' => 'articles#crop', :as => "crop_article"
   get '/../crop' => 'application#crop', :as => "crop_image"
   #get 'articles/index' => 'articles#index', :as => "index"

@@ -1,24 +1,24 @@
-<% 
-    first = true 
-    user.each do |match| 
+<%
+    first = true
+    user.each do |match|
 %>
     <div class="row matchesArticle <%= "#{match[:state]}" %>">
         <div class="col-md-2 a">
-            <% if first %> 
+            <% if first %>
                 <%= render "infoUser", :id => current_user.id, :name => current_user.name, :location => current_user.location%>
             <% end %>
         </div>
         <div class="col-md-3 b">
-            <%= render "infoArticle", :id => match[:my].id, :name => match[:my].name, :shippable => match[:my].shippable%>
+            <%= render "infoArticle", :id => match[:my].id, :description => match[:my].description, :name => match[:my].name, :shippable => match[:my].shippable%>
         </div>
         <div class="col-md-2 c">
             <%= render "articles/states/#{match[:state]}", :id1 => match[:my].id, :id2 => match[:other].id, :state => match[:state], :other_user => User.find(match[:other].user_id).id %>
         </div>
         <div class="col-md-3 d">
-            <%= render "infoArticle", :id => match[:other].id, :name => match[:other].name, :shippable => match[:other].shippable%>
+            <%= render "infoArticle", :id => match[:other].id, :description => match[:other].description, :name => match[:other].name, :shippable => match[:other].shippable%>
         </div>
         <div class="col-md-2 e">
-            <% if first 
+            <% if first
                 first = false;
             %>
                 <%= render "infoUser", :id => match[:other].user_id, :name => User.find(match[:other].user_id).name, :location => User.find(match[:other].user_id).location%>

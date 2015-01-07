@@ -1,4 +1,4 @@
-<%= image_tag "a#{id}.jpg", :class => 'img-responsive'  %>
+<%= image_tag Article.find(id).avatar.url(:medium), :class => 'img-responsive'  %>
 <div class="info">
     <span class="label label-info"><%= name %></span>
     <%= render "shippable", :shippable => shippable%>

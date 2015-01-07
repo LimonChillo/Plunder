@@ -3,7 +3,7 @@
     <div class="col-md-4 col-md-offset-4">
       <% if @random_article != nil %>
         <div class="randomImg">
-          <%= image_tag "a#{@random_article.id}.jpg", :class => 'img-responsive'  %>
+          <%= image_tag @random_article.avatar.url(:medium), :class => 'img-responsive'  %>
         </div>
         <p>
           <strong>
@@ -18,7 +18,17 @@
 
         <p>
           <strong>Shippable:</strong>
-          <%= @random_article.shippable %>
+          <%
+            if @random_article.shippable?
+          %>
+              <i class="glyphicon glyphicon-ok"></i>
+          <%
+            else
+          %>
+            <i class="glyphicon glyphicon-remove"></i>
+          <%
+          end
+          %>
         </p>
 
         <%= link_to 'Can I has?', like_article_path(:id => @random_article.id, :choice => "yes"), :class => 'btn btn-success btn-lg' %>
