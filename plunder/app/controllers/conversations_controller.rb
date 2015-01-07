@@ -11,7 +11,9 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    respond_with(@conversation)
+    #respond_with(@conversation)
+    #@messages = Message.joins(:conversation).where(:conversations => {:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]})
+    @messages = Message.where(:conversation_id => params[:id])
   end
 
   def new
@@ -40,6 +42,14 @@ class ConversationsController < ApplicationController
   def destroy
     @conversation.destroy
     respond_with(@conversation)
+  end
+
+  def new_message
+
+    Message.create(:text => params[:text], :sender => current_user.id, :conversation_id => params[:conversation_id])
+
+    session[:return_to] ||= request.referer
+    redirect_to session.delete(:return_to)
   end
 
   private

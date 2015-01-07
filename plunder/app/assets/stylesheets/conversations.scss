@@ -1,3 +1,49 @@
-// Place all the styles related to the conversations controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.control {
+	text-align: right;
+	margin-top: 10px;
+
+	.btn {
+		float: right;
+		margin-left: 5px;
+	}
+
+	span {
+    	display: block;
+    	overflow: hidden;
+    	padding-right:10px;
+    	padding-top: 4px;
+		
+		input {
+			width: 100%;
+		}
+
+	}
+}
+
+.messages {
+	margin-top: 20px;
+	width: 100%;
+	padding: 10px;
+	font-size: 150%;
+	tr {
+		td:nth-child(1) {
+			width: 40%;
+		}
+		td:nth-child(2) {
+			width: 20%;
+		}
+		td:nth-child(3) {
+			width: 40%;
+		}	
+	}	
+}
+
+.own {
+	background-color: rgba(32,255,99,0.2);
+	padding: 5px 10px; 
+}
+
+.other {
+	background-color: rgba(54,157,232,0.2);
+	padding: 5px 10px; 
+}

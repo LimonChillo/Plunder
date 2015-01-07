@@ -10,13 +10,20 @@
   </thead>
 
   <tbody>
-    <% @conversations.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id).each do |conversation| %>
+    <% @conversations.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id).each do |conversation| 
+
+      if conversation.user_1_id == current_user.id
+        user2 = conversation.user_2_id
+      else
+        user2 = conversation.user_1_id
+      end
+    %>
       <tr>
-        <td><%= conversation.user_1_id %></td>
-        <td><%= User.where(:id => conversation.user_2_id).pluck(:name).first %></td>
+        <td><%= image_tag User.where(:id => user2).first.avatar.url(:thumb) %></td>
+        <td><%= User.where(:id => user2).pluck(:name).first %></td>
         <td>
           <%= link_to 'Show', conversation %>
-          <%= link_to 'Destroy', conversation, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' } %>
         </td>
       </tr>
     <% end %>

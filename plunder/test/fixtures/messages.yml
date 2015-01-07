@@ -2,8 +2,10 @@
 
 one:
   text: MyString
-  sender: 1
+  sender: 2
+  conversation_id: 2
 
 two:
   text: MyString
   sender: 1
+  conversation_id: 2
