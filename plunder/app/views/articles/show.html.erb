@@ -1,17 +1,21 @@
-<p>
-  <strong>Name:</strong>
-  <%= @article.name %>
-</p>
+<div class="row showArticle">
+  <div class="col-md-4 col-md-offset-4">
+    <%= image_tag @article.avatar.url(:medium), :class => "showArticleImg" %>
+    <h2>
+      <%= @article.name %>
+    </h2>
 
-<p>
-  <strong>Description:</strong>
-  <%= @article.description %>
-</p>
+    <p>
+      <strong>Description:</strong>
+      <%= @article.description %>
+    </p>
 
-<p>
-  <strong>Shippable:</strong>
-  <%= @article.shippable %>
-</p>
+    <p>
+      <strong>Shippable:</strong>
+      <%= @article.shippable %>
+    </p>
 
-<%= link_to 'Edit', edit_article_path(@article) %> |
-<%= link_to 'Back', articles_path %>
+    <%= link_to 'Edit', edit_article_path(@article), :class => "btn btn-success" %>
+    <%= link_to 'Back', articles_path, :class => "btn btn-warning" %>
+  </div>
+</div>

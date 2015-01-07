@@ -15,21 +15,38 @@ class ArticlesController < ApplicationController
   def new
     @article = Article.new
     respond_with(@article)
+
   end
 
   def edit
   end
 
   def create
-    #article_params
     @article = Article.new(article_params.merge(:user_id => current_user.id))
     @article.save
+    render :action => 'crop'
     respond_with(@article)
   end
 
   def update
     @article.update(article_params)
-    respond_with(@article)
+    #respond_with(@article)
+    @article.avatar = params[:avatar] if params[:avatar] != nil
+    @article.save
+    if params[:article][:avatar].blank?
+      respond_with(@article)
+    elsif params[:crop_x] == nil
+      render :action => 'crop'
+    end
+
+
+  end
+
+  def crop
+    if params[:crop_x] != nil
+    Article.find_by_id(params[:id]).crop_x = params[:crop_x]
+    redirect_to articles_path
+  end
   end
 
   def destroy
@@ -37,6 +54,9 @@ class ArticlesController < ApplicationController
     respond_with(@article)
   end
 
+  #def crop_attached_file
+
+  #end
 
 
   def random
@@ -202,9 +222,7 @@ class ArticlesController < ApplicationController
     else
     end
 
-  session[:return_to] ||= request.referer
-  redirect_to session.delete(:return_to)
-
+    go_back
   end
 
   private
@@ -262,6 +280,6 @@ class ArticlesController < ApplicationController
     end
 
     def article_params
-      params.require(:article).permit(:name, :description, :shippable)
+      params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable)
     end
 end
