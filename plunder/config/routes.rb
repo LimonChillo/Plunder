@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   #get 'articles/index' => 'articles#index', :as => "index"
 
   get 'articles/exchangeHandler' =>'articles#exchange_handler', :as => "exchange_handler"
+  get 'articles/delete_match' =>'articles#delete_match', :as => "delete_match"
 
   resources :articles
 

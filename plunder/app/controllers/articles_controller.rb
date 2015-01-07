@@ -133,7 +133,17 @@ class ArticlesController < ApplicationController
       productsFromMatchedUser = Article.where(:user_id => matchedUser)
 
       # Ids aller Produkte die dieser User liked
-      likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
+      #likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
+
+      likeingFavoriteIds_1 = Exchange.where(:user_1 => current_user).where(:user_2 => matchedUser).pluck(:article_id_1)
+      likeingFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_2)
+
+      likedFavoriteIds_1 = Exchange.where(:user_1 => current_user).where(:user_2 => matchedUser).pluck(:article_id_2)
+      likedFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_1)
+
+      likeingFavoriteIds = likeingFavoriteIds_1 + likeingFavoriteIds_2
+      likedFavoriteIds = likedFavoriteIds_1 + likedFavoriteIds_2      
+
       # Alle Produkte die der User liked
       likeingProducts = Article.where(:id => likeingFavoriteIds)
 
@@ -147,6 +157,8 @@ class ArticlesController < ApplicationController
       array = []
 
       # Doppelte Schleife zur gegenüberstellung aller Artikel
+      
+
       myMatches.each do |my|
         otherMatches.each do |other|
 
@@ -240,6 +252,18 @@ class ArticlesController < ApplicationController
 
     go_back
   end
+
+  def delete_match 
+    id1 = params[:id1]
+    id2 = params[:id2]
+    id3 = params[:id3]
+
+
+    Exchange.where(:article_id_1 => [id1,id2], :article_id_2 => [id1,id2]).first.destroy
+
+    go_back
+  end
+
 
   private
 
