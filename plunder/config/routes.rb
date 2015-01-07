@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  resources :conversations
+
+  get 'conversation/current_conversation'
+
   get 'articles/matches' =>'articles#matches', :as => "matches_article"
   get 'articles/random' => 'articles#random', :as => "random_article"
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
@@ -8,7 +12,6 @@ Rails.application.routes.draw do
   #get 'articles/index' => 'articles#index', :as => "index"
 
   get 'articles/exchangeHandler' =>'articles#exchange_handler', :as => "exchange_handler"
-
 
   resources :articles
 
