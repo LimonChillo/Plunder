@@ -20,27 +20,19 @@
         <td><%= article.name %></td>
         <td><%= article.description %></td>
         <td class="center">
-          <%
-            if article.shippable?
-          %>
+          <% if article.shippable? %>
               <i class="glyphicon glyphicon-ok ship-yes"></i>
-          <%
-            else
-          %>
+          <% else %>
             <i class="glyphicon glyphicon-remove ship-no"></i>
-          <%
-          end
-          %>
-
+          <% end %>
         </td>
         <td><%= link_to 'Show', article, class: 'btn btn-info btn-xs' %>
         <%= link_to 'Edit', edit_article_path(:id => it), method: :post, class: 'btn btn-success btn-xs' %>
         <%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
 <br>
-
 <%= link_to 'New Article', new_article_path, class: 'btn btn-default' %>

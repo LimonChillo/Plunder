@@ -3,7 +3,6 @@
   	<div class="col-md-8 col-md-offset-2">
   		<table class="messages">
 			<% @messages.each do |message| %>
-
 				<tr>
 			     <% if message.sender == current_user.id %>
 			     	<td></td>
@@ -15,7 +14,6 @@
 			    	<td></td>
 			     <% end %>	
 			    </tr>
-
 			<% end %>
 		</table>
 
@@ -30,10 +28,8 @@
 				<%= button_tag(type: "submit", class: "btn btn-primary") do %>
 			    	<i class="glyphicon glyphicon-send"></i>
 				<% end %>
-
-			  	<span>
-			  		<%= text_field_tag(:text) %>
-			  	</span>
+				
+			  	<span> <%= text_field_tag(:text) %> </span>
 			  	<%= hidden_field_tag(:conversation_id, params[:id]) %>
 			  	
 			<% end %>

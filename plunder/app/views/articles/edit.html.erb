@@ -5,17 +5,9 @@
     %>
       <h1>Forbidden!</h1>
       <h2>You can't change articles that don't belong to you</h2>
-
-    <%
-      else
-    %>
-
+    <% else %>
     <h1>Editing Article</h1>
-
     <%= render 'form' %>
-    <%
-      end
-
-    %>
+    <% end %>
   </div>
 </div>

@@ -6,8 +6,6 @@ class ConversationsController < ApplicationController
   def index
     @conversations = Conversation.all
     respond_with(@conversations)
-    #@messages = Message.joins(:conversation).where(:conversation => {:user_id_1 => 1, :user_id_2 => 2})
-    #@messages = Message.joins(:conversation).all
   end
 
   def show
