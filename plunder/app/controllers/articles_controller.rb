@@ -24,7 +24,7 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(article_params.merge(:user_id => current_user.id))
     @article.save
-    render :action => 'crop'
+    #render :action => 'crop'
     respond_with(@article)
   end
 
@@ -33,21 +33,37 @@ class ArticlesController < ApplicationController
     #respond_with(@article)
     @article.avatar = params[:avatar] if params[:avatar] != nil
     @article.save
-    if params[:article][:avatar].blank?
+    #if params[:article][:avatar].blank?
       respond_with(@article)
-    elsif params[:crop_x] == nil
-      render :action => 'crop'
-    end
+    #elsif params[:crop_x] == nil
+    #  render :action => 'crop', :id => params[:id], :crop_x => params[:article][:crop_x]
+    #end
 
 
   end
 
   def crop
-    if params[:crop_x] != nil
-    Article.find_by_id(params[:id]).crop_x = params[:crop_x]
-    redirect_to articles_path
+    params.require(:article).permit(:crop_x, :crop_y, :crop_w, :crop_h)
+    article = Article.where(:id => params[:id]).first
+    for attribute in params[:article]
+      article.update_attributes(attribute[0] => attribute[1])
+    end
+
+    if article.crop_x != nil
+      article.avatar.reprocess!
+      article.crop_x = nil
+      article.save
+      #Article.reprocess_avatar
+    else
+      redirect_to random_article_path
+    end
   end
-  end
+
+  # def reprocess_avatar
+  #   avatar.reprocess!
+  #   crop_x = nil
+  #   redirect_to random_article_path
+  # end
 
   def destroy
     @article.destroy
@@ -280,6 +296,6 @@ class ArticlesController < ApplicationController
     end
 
     def article_params
-      params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable)
+      params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :crop_x)
     end
 end
