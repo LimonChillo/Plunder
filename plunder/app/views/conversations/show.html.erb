@@ -1,14 +1,47 @@
-<p id="notice"><%= notice %></p>
+<div class="container-fluid">
+  <div class="row">
+  	<div class="col-md-8 col-md-offset-2">
+  		<table class="messages">
+			<% @messages.each do |message| %>
 
-<p>
-  <strong>User 1:</strong>
-  <%= @conversation.user_1_id %>
-</p>
+				<tr>
+			     <% if message.sender == current_user.id %>
+			     	<td></td>
+			    	<td></td>
+			    	<td class="own" ><%= message.text %></td>
+			     <% else %>
+			     	<td class="other"><%= message.text %></td>
+			    	<td></td>
+			    	<td></td>
+			     <% end %>	
+			    </tr>
 
-<p>
-  <strong>User 2:</strong>
-  <%= @conversation.user_2_id %>
-</p>
+			<% end %>
+		</table>
 
-<%= link_to 'Edit', edit_conversation_path(@conversation) %> |
-<%= link_to 'Back', conversations_path %>
+		<div class="control">
+			<%= form_tag({controller: "conversations", action: "new_message"}, method: "post")   do %>
+			  	
+			  	
+			  	<%= link_to conversation_path(:id => params[:id]), class: "btn btn-success" do %>
+			    	<i class="glyphicon glyphicon-refresh"></i>
+				<% end %>
+
+				<%= button_tag(type: "submit", class: "btn btn-primary") do %>
+			    	<i class="glyphicon glyphicon-send"></i>
+				<% end %>
+
+			  	<span>
+			  		<%= text_field_tag(:text) %>
+			  	</span>
+			  	<%= hidden_field_tag(:conversation_id, params[:id]) %>
+			  	
+			<% end %>
+		</div>
+  	</div>
+  </div>
+</div>
+
+
+
+

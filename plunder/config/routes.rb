@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  post 'conversations/new_message' =>'conversations#new_message'
   resources :conversations
 
   get 'conversation/current_conversation'
