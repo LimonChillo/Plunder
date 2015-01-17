@@ -133,7 +133,7 @@ class ArticlesController < ApplicationController
       productsFromMatchedUser = Article.where(:user_id => matchedUser)
 
       # Ids aller Produkte die dieser User liked
-      #likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
+      likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
 
       likeingFavoriteIds_1 = Exchange.where(:user_1 => current_user).where(:user_2 => matchedUser).pluck(:article_id_1)
       likeingFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_2)

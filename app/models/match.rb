@@ -1,6 +1,6 @@
 class Match < ActiveRecord::Base
 	belongs_to :user
-	belongs_to :favorite, :class_name => "Article"
+	belongs_to :article
 
 	validates :favorite_id,
           :presence => true,
