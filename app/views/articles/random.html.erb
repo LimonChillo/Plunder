@@ -29,8 +29,10 @@
           %>
         </p>
 
-        <%= link_to 'Can I has?', like_article_path(:id => @random_article.id, :choice => "yes"), :class => 'btn btn-success btn-lg' %>
-        <%= link_to 'Nope', like_article_path(:id => @random_article.id, :choice => "no"), :class => 'btn btn-danger  btn-lg' %>
+        <%= link_to 'Can I has?', like_article_path(:id => @random_article.id, :choice => "yes"), :class => 'btn btn-success btn-lg', :id => "yes" %>
+        <%= link_to 'Nope', like_article_path(:id => @random_article.id, :choice => "no"), :class => 'btn btn-danger  btn-lg', :id => "no" %>
+        <br><br>
+        <p>Use your keyboard: 'A' - Can I has | 'D' - Nope</p>
 
       <% else %>
         <h2> There are no Articles you have not seen yet :(</h2>
@@ -39,4 +41,16 @@
       <% end %>
     </div>
 </div>
+<script type="text/javascript">
+
+ $(document).keypress(function(e) {
+    //console.log(e.which)
+    if(e.which == 97) {
+      $( "#yes" )[0].click();
+    }
+    if(e.which == 100) {
+      $("#no")[0].click();
+    }
+});
+</script>
 
