@@ -23,6 +23,15 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem "paperclip", "~> 4.2"
+
+gem 'papercrop'
+
+gem 'devise'
+
+  gem 'omniauth-facebook'
+
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -43,13 +52,6 @@ group :development, :test do
   gem 'spring'
 
   gem 'haml'
-
-  gem 'devise'
-
-  gem 'omniauth-facebook'
-
-  gem "paperclip", "~> 4.2"
-
-  gem 'papercrop'
+  
 end
 

@@ -1,0 +1,218 @@
++# Remove Function !!!
+
++# Facebook Auth ??
++# Realtime Chat ??
+
+DONE +# ACHTUNG: Gems wie haml, devise, paperclip, etc. nicht in ausschließlich in die :development/:test group geben, da die App sonst in :production nicht funktioniert!
+DONE +# database index nicht vergessen!
++# die Files unter public/assets nicht einchecken
+DONE +# remove empty coffe files
+
+ALLGEMEIN:
+
++# leere Zeile am Methodenende
++# unnotwendige Kommentare entfernen
++# Mischung von Ruby 1.8 und Ruby 1.9 Hash-Syntax (:foo => "bar" vs foo: "bar")
++# trailing whitespace vermeiden (Leerzeichen am Ende einer Zeile oder Datei)
++# snakecase statt camelcase für alle Variablen- und Methodennamen
+
+
+
+
+ 
++  # wird scheinbar derzeit nicht verwendet, Zweck ist mir nicht klar.
+   def crop
++    # wird nicht zugewiesen, hat daher keinen Effekt
+     params.require(:article).permit(:crop_x, :crop_y, :crop_w, :crop_h)
+     article = Article.where(:id => params[:id]).first
+     for attribute in params[:article]
++      # Sicherheitsproblem! Auch wenn der Code entfernt wird, schickt mir bitte kurz, worin eurer Meinung nach hier
++      # das Sicherheitsproblem besteht.
+       article.update_attributes(attribute[0] => attribute[1])
+     end
+ 
+@@ -76,6 +82,9 @@ class ArticlesController < ApplicationController
+ 
+ 
+   def random
++    # zur Vereinfachung siehe http://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-joins
++    # außerdem als scope im Model umsetzen
++    # zu random siehe Kommentar in erster Feedbackrunde
+     othersArticles = Article.where.not(:user_id => current_user.id)
+     matchedByMe = Match.where(:user_id => current_user.id).pluck(:favorite_id)
+ 
+@@ -98,6 +107,18 @@ class ArticlesController < ApplicationController
+     go_back
+   end
+ 
++  # hier passt noch der Kommentar aus dem ersten Feedback
++  # # Methoden in einem Controller, die keine Actions sind, sollten alle zusammen unter den actions stehen und protected oder private sein
++  # viel Code, allerdings an der falschen Stelle. Der Controller sollte schlank bleiben und keine Business-Logik
++  # enthalten (fat model, skinny controller). Dazu sind die Methoden auch noch sehr lang und vermischen Verantwortlichkeiten (single responsibility
++  # principle). Viele Kommentare sind notwendig, um die verschiedenen Verantwortlichkeiten in der Methode zu erklären (was selbsterklärend sein
++  # könnte, wenn der Bereich in einer eigenen Methode mit gutem Namen sein würde).
++  #
++  # die wichtigste Änderung für den Plunderclub ist es, alle komplexe Logik in diesem Controller einem Refactoring zu unterziehen *und* aus dem Controller wegzubewegen (werden aus dem Controller nur noch aufgerufen). Einige Hinweise:
++  # * wenn die Verbindung von zwei Elementen nur für den View eine spezielle Anzeige triggered, gehört das in einen Helper
++  # * viele Stellen sind dupliziert, bspw. ist ein großer Teil der Logik in matches bereits durch Datenbank-Records abgreifbar
++  # * erstellt eigene Klassen mit kurzen aussagekräfigen Methoden, um so lange Methoden zu vermeiden, wie sie derzeit in diesem Controller sind (Tests bieten sich hier besonders an).
++  #
+   def matches
+ 
+     @currentUser = current_user.id
+@@ -161,6 +182,7 @@ class ArticlesController < ApplicationController
+ 
+       myMatches.each do |my|
+         otherMatches.each do |other|
++          # bitte, abgesehen vom oben angesprochenen Refactoring, auch auf generelles Aufräumen achten, siehe hier die unnötigen Leerzeilen und Kommentare
+ 
+ 
+ 
+@@ -203,6 +225,7 @@ class ArticlesController < ApplicationController
+     end
+   end
+ 
++  # Sicherheitslücke, zu sehen wenn ihr bspw. in die Routen-Definition zur Action seht!
+   def exchange_handler
+ 
+     action = params[:choice]
+@@ -228,6 +251,8 @@ class ArticlesController < ApplicationController
+     when "rejected"
+       # Remove Match
+       # IMPLEMENT
++    
++    # komplizierter als notwendig, auf unset muss man imo nicht zurückstellen können
+     when "iAccepted"
+       # Undo Acception
+       actualExchange.update_attributes(:user_1_accept => "unset")
+@@ -256,6 +281,7 @@ class ArticlesController < ApplicationController
+   def delete_match 
+     id1 = params[:id1]
+     id2 = params[:id2]
++    # was macht id3? ;-)
+     id3 = params[:id3]
+ 
+ 
+@@ -269,6 +295,7 @@ class ArticlesController < ApplicationController
+ 
+   def actual_exchange_method(my_id, other_id)
+ 
++    # überflüssiges return, außerdem find_by verwenden
+     return Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id]).first
+ 
+   end
+@@ -286,6 +313,7 @@ class ArticlesController < ApplicationController
+ 
+     # if other User has not liked any of my Articles go back
+     if myMatchedArticlesByOtherUser == nil
++      # Methode wird hier nicht gestoppt, da kein return
+       go_back
+     end
+ 
+diff --git a/plunder/app/controllers/users/registrations_controller.rb b/plunder/app/controllers/users/registrations_controller.rb
+index 1ce3e3e..a09b71f 100644
+--- a/plunder/app/controllers/users/registrations_controller.rb
++++ b/plunder/app/controllers/users/registrations_controller.rb
+@@ -1,4 +1,5 @@
+ class Users::RegistrationsController < Devise::RegistrationsController
++  # hier und im gesamten Namespace aufräumen
+ # before_filter :configure_sign_up_params, only: [:create]
+  before_filter :configure_account_update_params, only: [:update]
+ 
+diff --git a/plunder/app/models/conversation.rb b/plunder/app/models/conversation.rb
+index 69f191f..3bc8fca 100644
+--- a/plunder/app/models/conversation.rb
++++ b/plunder/app/models/conversation.rb
+@@ -9,6 +9,7 @@ class Conversation < ActiveRecord::Base
+ 
+    	validate :no_conversation_with_same_user
+ 
++        # zu viele unnötige Leerzeilen
+ 
+ 
+     private
+diff --git a/plunder/app/models/exchange.rb b/plunder/app/models/exchange.rb
+index bce3805..cc0dd9a 100644
+--- a/plunder/app/models/exchange.rb
++++ b/plunder/app/models/exchange.rb
+@@ -1,10 +1,12 @@
+ class Exchange < ActiveRecord::Base
+ 
++  # korrekte Einrückungen beachten!
+ 	# belongs_to :user_1, :polymorphic => true
+ 	# belongs_to :user_2, :polymorphic => true
+ 	# belongs_to :article_id_1, :polymorphic => true
+ 	# belongs_to :article_id_1, :polymorphic => true
+ 
++        # kann jeweils leicht auf eine Zeile, auch die zusätzlichen Leerzeilen sind nicht nötig
+ 	validates :user_1,
+           		:presence => true
+ 
+@@ -19,6 +21,7 @@ class Exchange < ActiveRecord::Base
+ 
+ 	validates :user_1_accept,
+           		:presence => true,
++
+ 				:inclusion => { :in => ["accepted", "rejected", "unset"] }
+ 
+ 	validates :user_2_accept,
+diff --git a/plunder/app/models/message.rb b/plunder/app/models/message.rb
+index 481affe..7b2ea63 100644
+--- a/plunder/app/models/message.rb
++++ b/plunder/app/models/message.rb
+@@ -5,6 +5,8 @@ class Message < ActiveRecord::Base
+           		:presence => true
+ 
+ 	validates :text,
++          # korrekte Einrückungen beachten
++          # einfacher, einfach die Tags zu escape (automatisch) als eine gute Regex ohne false positives zu schreiben
+           		:presence => true,
+           		:format => { :without => /<(.|\n)*?>/,
+                        :message => 'No HTML Tags allowed in chat. ' }
+diff --git a/plunder/app/views/articles/crop.html.erb b/plunder/app/views/articles/crop.html.erb
+index 0f92d5f..5d5d182 100644
+--- a/plunder/app/views/articles/crop.html.erb
++++ b/plunder/app/views/articles/crop.html.erb
+@@ -1,3 +1,4 @@
++<!-- bitte aufräumen -->
+ <head>
+   <title><%= h(yield(:title) || "Untitled") %></title>
+   <%= stylesheet_link_tag 'application' %>
+diff --git a/plunder/config/initializers/devise.rb b/plunder/config/initializers/devise.rb
+index 828d120..50697b5 100644
+--- a/plunder/config/initializers/devise.rb
++++ b/plunder/config/initializers/devise.rb
+@@ -234,6 +234,7 @@ Devise.setup do |config|
+   # Add a new OmniAuth provider. Check the wiki for more information on setting
+   # up on your models and hooks.
+   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
++  # ACHTUNG: Keine Secrets ins Repository! Lieber figaro verwenden.
+   config.omniauth :facebook, '1524920067792495', '1df632fbf64f36206cb0bfde0911366c'
+ 
+   # ==> Warden configuration
+diff --git a/plunder/config/routes.rb b/plunder/config/routes.rb
+index bd2c91f..c3647c8 100644
+--- a/plunder/config/routes.rb
++++ b/plunder/config/routes.rb
+@@ -5,11 +5,13 @@ Rails.application.routes.draw do
+ 
+   get 'conversation/current_conversation'
+ 
++  # in resources definieren, siehe erste Feedback-Runde
+   get 'articles/matches' =>'articles#matches', :as => "matches_article"
+   get 'articles/random' => 'articles#random', :as => "random_article"
+   get 'articles/like/:id' => 'articles#like', :as => "like_article"
+   post 'articles/:id/edit' => 'articles#edit', :as => "edit_article"
+   patch 'articles/crop/:id' => 'articles#crop', :as => "crop_article"
++  # hm?
+   get '/../crop' => 'application#crop', :as => "crop_image"
+   #get 'articles/index' => 'articles#index', :as => "index"
+ 
+diff --git a/plunder/vendor/assets/javascripts/papercrop.js b/plunder/vendor/assets/javascripts/papercrop.js
+index 521bdfb..b2e03ed 100644
+--- a/plunder/vendor/assets/javascripts/papercrop.js
++++ b/plunder/vendor/assets/javascripts/papercrop.js
+@@ -1,4 +1,4 @@
+-
++ich nehme an, das war nicht beabsichtigt? ;-)
+ 
