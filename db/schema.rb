@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150117221553) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "articles", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -48,12 +51,12 @@ ActiveRecord::Schema.define(version: 20150117221553) do
     t.datetime "updated_at",    null: false
   end
 
-  add_index "exchanges", ["article_id_1"], name: "index_exchanges_on_article_id_1"
-  add_index "exchanges", ["article_id_2"], name: "index_exchanges_on_article_id_2"
-  add_index "exchanges", ["user_1"], name: "index_exchanges_on_user_1"
-  add_index "exchanges", ["user_1_accept"], name: "index_exchanges_on_user_1_accept"
-  add_index "exchanges", ["user_2"], name: "index_exchanges_on_user_2"
-  add_index "exchanges", ["user_2_accept"], name: "index_exchanges_on_user_2_accept"
+  add_index "exchanges", ["article_id_1"], name: "index_exchanges_on_article_id_1", using: :btree
+  add_index "exchanges", ["article_id_2"], name: "index_exchanges_on_article_id_2", using: :btree
+  add_index "exchanges", ["user_1"], name: "index_exchanges_on_user_1", using: :btree
+  add_index "exchanges", ["user_1_accept"], name: "index_exchanges_on_user_1_accept", using: :btree
+  add_index "exchanges", ["user_2"], name: "index_exchanges_on_user_2", using: :btree
+  add_index "exchanges", ["user_2_accept"], name: "index_exchanges_on_user_2_accept", using: :btree
 
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id"
@@ -63,7 +66,7 @@ ActiveRecord::Schema.define(version: 20150117221553) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "identities", ["user_id"], name: "index_identities_on_user_id"
+  add_index "identities", ["user_id"], name: "index_identities_on_user_id", using: :btree
 
   create_table "matches", force: :cascade do |t|
     t.integer  "favorite_id"
@@ -74,8 +77,8 @@ ActiveRecord::Schema.define(version: 20150117221553) do
     t.datetime "updated_at",      null: false
   end
 
-  add_index "matches", ["favorite_id"], name: "index_matches_on_favorite_id"
-  add_index "matches", ["user_id"], name: "index_matches_on_user_id"
+  add_index "matches", ["favorite_id"], name: "index_matches_on_favorite_id", using: :btree
+  add_index "matches", ["user_id"], name: "index_matches_on_user_id", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.string   "text"
@@ -110,7 +113,7 @@ ActiveRecord::Schema.define(version: 20150117221553) do
     t.integer  "crop_h"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end

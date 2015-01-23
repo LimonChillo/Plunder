@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <%
-      if @matches.any?
-        @matches.each do |user| %>
+      if @exchanges_for_view.any?
+        @exchanges_for_view.each do |user| %>
         <div class="row matchesUser">
             <%= render "matchesUser", :user => user %>
         </div>

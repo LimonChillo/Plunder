@@ -83,106 +83,50 @@ class ArticlesController < ApplicationController
   end
 
   def matches
+    @exchanges_for_view = []
 
-    @currentUser = current_user.id
-    # # Alle eigenen Artikel
-    # ownProducts = Article.where(:user_id => @currentUser)
+    other_user = (Exchange.where(user_1: current_user.id).distinct.pluck(:user_2) | Exchange.where(user_2: current_user.id).distinct.pluck(:user_1)).sort!
 
-    # # Ids aller Artikel die ich like
-    # likedFavoriteIds = Match.where(:like => true, :user_id => @currentUser).pluck(:favorite_id)
-    # # Alle Artikel die ich like
-    # favoritedProducts = Article.where(:id => likedFavoriteIds)
-    # # Alle User von denen ich Artikel like
-    # favoritedUsers = User.joins(:articles).where(:articles => {:id => favoritedProducts}).distinct
+    other_user.each do |other|
+      
+      exchanges_with_other_user = Exchange.where(user_1: [other, current_user.id], user_2: [other, current_user.id])
+      exchanges_per_user = []
+      exchanges_with_other_user.each do |ex|
+          
+          # setzen der states
+          if ex.user_1_accept == "accepted" && ex.user_2_accept == "unset" && ex.user_1 == current_user.id
+            state = "iAccepted"
+          elsif ex.user_1_accept == "accepted" && ex.user_2_accept == "unset"
+            state = "accepted"
+          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "unset" && ex.user_1 == current_user.id
+            state = "iRejected"
+          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "unset"
+            state = "rejected"
+          elsif ex.user_1_accept == "accepted" && ex.user_2_accept == "accepted"
+            state = "bothAccepted"
+          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "rejected"
+            state = "bothRejected"
+          else
+            state = "neutral"
+          end
 
-    # # Ids aller User die Artikel von mir liken
-    # likeingUsersIds = Match.where(:like => true, :favorite_id => ownProducts).pluck(:user_id)
-    # # Alle User die Artikel von mir liken
-    # likeingUser = User.where(:id => likeingUsersIds)
+          # Welcher Artikel gehört zu welchem User
+          if ex.user_1 == current_user.id
+            my_article = ex.article_id_1
+            other_article = ex.article_id_2
+          else
+            my_article = ex.article_id_2
+            other_article = ex.article_id_1
+          end
 
-
-    # # Alle User mit denen ich Matches habe
-    # @matchedUsers = (favoritedUsers & likeingUser)
-
-    # # Alle Produkte von gematchen Usern
-    # #producstFromMatchedUser = Article.joins(:users).where(:user => {:id => @matchedUsers})
-
-    # # Inhalt soll ein User mit allen Matches sein
-    @matches = []
-
-    # # Schleife über alle User mit matches
-    # @matchedUsers.each do |matchedUser|
-
-    #   # Alle Produkte eines Users
-    #   productsFromMatchedUser = Article.where(:user_id => matchedUser)
-
-    #   # Ids aller Produkte die dieser User liked
-    #   likeingFavoriteIds = Match.where(:like => true, :user_id => matchedUser).pluck(:favorite_id)
-
-    #   likeingFavoriteIds_1 = Exchange.where(:user_1 => current_user).where(:user_2 => matchedUser).pluck(:article_id_1)
-    #   likeingFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_2)
-
-    #   likedFavoriteIds_1 = Exchange.where(:user_1 => current_user).where(:user_2 => matchedUser).pluck(:article_id_2)
-    #   likedFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_1)
-
-    #   likeingFavoriteIds = likeingFavoriteIds_1 + likeingFavoriteIds_2
-    #   likedFavoriteIds = likedFavoriteIds_1 + likedFavoriteIds_2
-
-    #   # Alle Produkte die der User liked
-    #   likeingProducts = Article.where(:id => likeingFavoriteIds)
-
-    #   # Alle Produkte die ich von diesem User like
-    #   myMatches = (productsFromMatchedUser & favoritedProducts)
-
-    #   # Alle Produkte die der User von mir liked
-    #   otherMatches = (ownProducts & likeingProducts)
-
-    #   # Inhalt sollen alle gegenüberstellungen von Artikeln sein
-       array = []
-
-    #   # Doppelte Schleife zur gegenüberstellung aller Artikel
-
-    my_exchanges_1 = Exchange.where(user_1: @current_user)
-    my_articles_1 = my_exchanges_1.article_id_1
-    other_articles_1
-    my_exchanges_2 = Exchange.where(user_2: @current_user)
-    my_articles_2 = my_exchanges_2.article_id_2
-    my_exchanges = my_exchanges_1 + my_exchanges_2
-
-      # myMatches.each do |my|
-      #   otherMatches.each do |other|
-      my_exchanges.each do |ex|
-          # actualExchange = actual_exchange_method my.id, other.id
-          actualExchange = ex
-          # unless actualExchange.nil?
-
-            # setzen der states
-            if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
-              state = "iAccepted"
-            elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset"
-              state = "accepted"
-            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
-              state = "iRejected"
-            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset"
-              state = "rejected"
-            elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "accepted"
-              state = "bothAccepted"
-            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "rejected"
-              state = "bothRejected"
-            else
-              state = "neutral"
-            end
-
-            # Weitergabe des Matching Paares als Hash
-            hash = { :other => Article.find(ex.article_id_1), :my => Article.find(ex.article_id_2), :state => state}
-            array.push(hash)
-          # end
-        # end
+          # Weitergabe des Matching Paares als Hash
+          hash = { :other => Article.find(other_article), :my => Article.find(my_article), :state => state}
+          exchanges_per_user.push(hash)
       end
 
-      @matches.push(array)
+      @exchanges_for_view.push(exchanges_per_user)
 
-    # end
+     end
   end
 
   def exchange_handler
