@@ -41,7 +41,7 @@ class ArticlesController < ApplicationController
 
   end
 
-  
+
 
   # def reprocess_avatar
   #   avatar.reprocess!
@@ -126,7 +126,7 @@ class ArticlesController < ApplicationController
       likedFavoriteIds_2 = Exchange.where(:user_2 => current_user).where(:user_1 => matchedUser).pluck(:article_id_1)
 
       likeingFavoriteIds = likeingFavoriteIds_1 + likeingFavoriteIds_2
-      likedFavoriteIds = likedFavoriteIds_1 + likedFavoriteIds_2      
+      likedFavoriteIds = likedFavoriteIds_1 + likedFavoriteIds_2
 
       # Alle Produkte die der User liked
       likeingProducts = Article.where(:id => likeingFavoriteIds)
@@ -141,14 +141,14 @@ class ArticlesController < ApplicationController
       array = []
 
       # Doppelte Schleife zur gegenüberstellung aller Artikel
-      
+
 
       myMatches.each do |my|
         otherMatches.each do |other|
 
           actualExchange = actual_exchange_method my.id, other.id
 
-          #if actualExchange.exists_?
+          unless actualExchange.nil?
 
             # setzen der states
             if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
@@ -170,7 +170,7 @@ class ArticlesController < ApplicationController
             # Weitergabe des Matching Paares als Hash
             hash = { :other => my, :my => other, :state => state}
             array.push(hash)
-          #end
+          end
         end
       end
 
@@ -220,7 +220,7 @@ class ArticlesController < ApplicationController
     go_back
   end
 
-  def delete_match 
+  def delete_match
     id1 = params[:id1]
     id2 = params[:id2]
 
