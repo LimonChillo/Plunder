@@ -10,7 +10,6 @@ class ConversationsController < ApplicationController
 
   def show
     #respond_with(@conversation)
-    #@messages = Message.joins(:conversation).where(:conversations => {:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]})
     @messages = Message.where(:conversation_id => params[:id])
   end
 

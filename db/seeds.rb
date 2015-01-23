@@ -22,7 +22,6 @@ u2.favorites << s
 
 u3.favorites << b
 
-
 u4.favorites << s
 u4.favorites << e
 u4.favorites << f

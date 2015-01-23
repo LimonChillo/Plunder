@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150107211801) do
+ActiveRecord::Schema.define(version: 20150117221553) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "name"
@@ -48,6 +48,13 @@ ActiveRecord::Schema.define(version: 20150107211801) do
     t.datetime "updated_at",    null: false
   end
 
+  add_index "exchanges", ["article_id_1"], name: "index_exchanges_on_article_id_1"
+  add_index "exchanges", ["article_id_2"], name: "index_exchanges_on_article_id_2"
+  add_index "exchanges", ["user_1"], name: "index_exchanges_on_user_1"
+  add_index "exchanges", ["user_1_accept"], name: "index_exchanges_on_user_1_accept"
+  add_index "exchanges", ["user_2"], name: "index_exchanges_on_user_2"
+  add_index "exchanges", ["user_2_accept"], name: "index_exchanges_on_user_2_accept"
+
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "provider"
@@ -62,9 +69,13 @@ ActiveRecord::Schema.define(version: 20150107211801) do
     t.integer  "favorite_id"
     t.integer  "user_id"
     t.boolean  "like"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "conversation_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
+
+  add_index "matches", ["favorite_id"], name: "index_matches_on_favorite_id"
+  add_index "matches", ["user_id"], name: "index_matches_on_user_id"
 
   create_table "messages", force: :cascade do |t|
     t.string   "text"

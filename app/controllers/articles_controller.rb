@@ -15,7 +15,6 @@ class ArticlesController < ApplicationController
   def new
     @article = Article.new
     respond_with(@article)
-
   end
 
   def edit
@@ -162,39 +161,31 @@ class ArticlesController < ApplicationController
       myMatches.each do |my|
         otherMatches.each do |other|
 
-
-
-          #---------- State Handling ---------------------------
-
-          # actualExchange = Exchange.where(:article_id_1 => [my.id,other.id], :article_id_2 => [my.id,other.id])
-
-          # Feststellung welcher User ich bin, und welcher der andere ist.
-
           actualExchange = actual_exchange_method my.id, other.id
 
-          # setzen der states
-          if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
-            state = "iAccepted"
-          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset"
-            state = "accepted"
-          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
-            state = "iRejected"
-          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset"
-            state = "rejected"
-          elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "accepted"
-            state = "bothAccepted"
-          elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "rejected"
-            state = "bothRejected"
-          else
-            state = "neutral"
-          end
+          #if actualExchange.exists_?
 
+            # setzen der states
+            if actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
+              state = "iAccepted"
+            elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "unset"
+              state = "accepted"
+            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset" && actualExchange.user_1 == current_user.id
+              state = "iRejected"
+            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "unset"
+              state = "rejected"
+            elsif actualExchange.user_1_accept == "accepted" && actualExchange.user_2_accept == "accepted"
+              state = "bothAccepted"
+            elsif actualExchange.user_1_accept == "rejected" && actualExchange.user_2_accept == "rejected"
+              state = "bothRejected"
+            else
+              state = "neutral"
+            end
 
-          #----------------------------------------
-          # Weitergabe des Matching Paares als Hash
-          hash = { :other => my, :my => other, :state => state}
-          array.push(hash)
-
+            # Weitergabe des Matching Paares als Hash
+            hash = { :other => my, :my => other, :state => state}
+            array.push(hash)
+          #end
         end
       end
 
@@ -225,9 +216,6 @@ class ArticlesController < ApplicationController
       else
         actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
       end
-    when "rejected"
-      # Remove Match
-      # IMPLEMENT
     when "iAccepted"
       # Undo Acception
       actualExchange.update_attributes(:user_1_accept => "unset")
@@ -246,8 +234,6 @@ class ArticlesController < ApplicationController
       else
         actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
       end
-
-    else
     end
 
     go_back
@@ -256,8 +242,6 @@ class ArticlesController < ApplicationController
   def delete_match 
     id1 = params[:id1]
     id2 = params[:id2]
-    id3 = params[:id3]
-
 
     Exchange.where(:article_id_1 => [id1,id2], :article_id_2 => [id1,id2]).first.destroy
 

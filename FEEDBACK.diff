@@ -85,12 +85,13 @@ ALLGEMEIN:
      when "iAccepted"
        # Undo Acception
        actualExchange.update_attributes(:user_1_accept => "unset")
-@@ -256,6 +281,7 @@ class ArticlesController < ApplicationController
-   def delete_match 
-     id1 = params[:id1]
-     id2 = params[:id2]
-+    # was macht id3? ;-)
-     id3 = params[:id3]
+       
+DONE@@ -256,6 +281,7 @@ class ArticlesController < ApplicationController
+DONE   def delete_match 
+DONE     id1 = params[:id1]
+DONE     id2 = params[:id2]
+DONE +    # was macht id3? ;-)
+DONE     id3 = params[:id3]
  
  
 @@ -269,6 +295,7 @@ class ArticlesController < ApplicationController
