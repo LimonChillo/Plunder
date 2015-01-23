@@ -2,10 +2,9 @@ class Message < ActiveRecord::Base
 	belongs_to :conversation
 
 	validates :sender,
-          		:presence => true
+    :presence => true
 
 	validates :text,
-          		:presence => true,
-          		:format => { :without => /<(.|\n)*?>/,
-                       :message => 'No HTML Tags allowed in chat. ' }
+    :presence => true,
+    :format => { :without => /<(.|\n)*?>/, :message => 'No HTML Tags allowed in chat. ' }
 end

@@ -41,22 +41,7 @@ class ArticlesController < ApplicationController
 
   end
 
-  def crop
-    params.require(:article).permit(:crop_x, :crop_y, :crop_w, :crop_h)
-    article = Article.where(:id => params[:id]).first
-    for attribute in params[:article]
-      article.update_attributes(attribute[0] => attribute[1])
-    end
-
-    if article.crop_x != nil
-      article.avatar.reprocess!
-      article.crop_x = nil
-      article.save
-      #Article.reprocess_avatar
-    else
-      redirect_to random_article_path
-    end
-  end
+  
 
   # def reprocess_avatar
   #   avatar.reprocess!
@@ -218,16 +203,12 @@ class ArticlesController < ApplicationController
       end
     when "iAccepted"
       # Undo Acception
-      actualExchange.update_attributes(:user_1_accept => "unset")
+      actualExchange.update_attributes(:user_1_accept => "rejected")
     when "iRejected"
       # Undo Rejection
-      actualExchange.update_attributes(:user_1_accept => "unset")
+      actualExchange.update_attributes(:user_1_accept => "accepted")
     when "bothAccepted"
-      if action == "yes"
-        #IMPLEMENT
-      else
-        actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser)
-      end
+      actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser)
     when "neutral"
       if action == "yes"
         actualExchange.update_attributes(:user_1_accept => "accepted", :user_1 => current_user.id, :user_2 => otherUser)

@@ -1,18 +1,9 @@
 Rails.application.routes.draw do
 
-  post 'conversations/new_message' =>'conversations#new_message'
-  resources :conversations
-
-  get 'conversation/current_conversation'
-
   get 'articles/matches' =>'articles#matches', :as => "matches_article"
   get 'articles/random' => 'articles#random', :as => "random_article"
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
   post 'articles/:id/edit' => 'articles#edit', :as => "edit_article"
-  patch 'articles/crop/:id' => 'articles#crop', :as => "crop_article"
-  get '/../crop' => 'application#crop', :as => "crop_image"
-  #get 'articles/index' => 'articles#index', :as => "index"
-
   get 'articles/exchangeHandler' =>'articles#exchange_handler', :as => "exchange_handler"
   get 'articles/delete_match' =>'articles#delete_match', :as => "delete_match"
 
@@ -26,8 +17,25 @@ Rails.application.routes.draw do
   #   member do
   #     get :like/:id => 'articles#like', :as => "like_article"
   #     get :exchangeHandler =>'articles#exchange_handler', :as => "exchange_handler"
+        # post :id/edit => 'articles#edit', :as => "edit_article"
+        # get :delete_match =>'articles#delete_match', :as => "delete_match"
   #   end
   # end
+
+  post 'conversations/new_message' =>'conversations#new_message'
+  get 'conversation/current_conversation'
+
+  resources :conversations
+
+  # resources :conversations do
+  #  collection do
+  #  end
+  #   member do
+  #     post :new_message =>'conversations#new_message'
+  #     get :current_conversation'
+  #   end
+  # end
+
 
 
   #devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }
