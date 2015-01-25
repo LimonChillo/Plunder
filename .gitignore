@@ -20,3 +20,5 @@
 
 /public/system/users/*
 /public/system/articles/*
+# Ignore application configuration
+/config/application.yml

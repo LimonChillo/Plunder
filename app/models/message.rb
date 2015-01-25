@@ -5,6 +5,5 @@ class Message < ActiveRecord::Base
     :presence => true
 
 	validates :text,
-    :presence => true,
-    :format => { :without => /<(.|\n)*?>/, :message => 'No HTML Tags allowed in chat. ' }
+    :presence => true
 end

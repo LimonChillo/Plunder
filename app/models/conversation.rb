@@ -3,7 +3,7 @@ class Conversation < ActiveRecord::Base
 
 	validates :user_1_id, :presence => true
 	validates :user_2_id, :presence => true
-  validate :no_conversation_with_same_user
+  	validate :no_conversation_with_same_user
 
   private
     def no_conversation_with_same_user

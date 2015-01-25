@@ -9,6 +9,4 @@ class Article < ActiveRecord::Base
   
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   validates :name, :presence => true
-  validates :description,
-    :format => { :without => /<(.|\n)*?>/, :message => 'No HTML Tags allowed in description. ' }
 end

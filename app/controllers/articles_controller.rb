@@ -182,9 +182,7 @@ class ArticlesController < ApplicationController
   private
 
   def actual_exchange_method(my_id, other_id)
-
-    return Exchange.where(:article_id_1 => [my_id,other_id], :article_id_2 => [my_id,other_id]).first
-
+    Exchange.find_by_article_id_1_and_article_id_2([my_id,other_id],[my_id,other_id])
   end
 
    def go_back
@@ -201,6 +199,7 @@ class ArticlesController < ApplicationController
     # if other User has not liked any of my Articles go back
     if myMatchedArticlesByOtherUser == nil
       go_back
+      return 0
     end
 
     # get the other user's Articles I liked
@@ -210,6 +209,7 @@ class ArticlesController < ApplicationController
     # if I have not liked any of Other's Articles go back
     if otherUsersArticlesILiked == nil
       go_back
+      return 0
     end
 
     # iterate through my Articles combine with the Other's i just liked
