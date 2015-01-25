@@ -1,9 +1,6 @@
 class Exchange < ActiveRecord::Base
 
-	# belongs_to :user_1, :polymorphic => true
-	# belongs_to :user_2, :polymorphic => true
-	# belongs_to :article_id_1, :polymorphic => true
-	# belongs_to :article_id_1, :polymorphic => true
+	belongs_to :exchange_owner, :polymorphic => true
 
 	validates :user_1, :presence => true
 	validates :user_2, :presence => true

@@ -55,3 +55,5 @@ group :development, :test do
   
 end
 
+ruby '2.0.0'
+

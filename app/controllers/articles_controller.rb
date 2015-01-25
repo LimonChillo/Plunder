@@ -179,7 +179,6 @@ class ArticlesController < ApplicationController
     go_back
   end
 
-
   private
 
   def actual_exchange_method(my_id, other_id)

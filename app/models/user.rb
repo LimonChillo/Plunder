@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :articles, :dependent => :destroy
   has_many :matches, :dependent => :destroy
+  has_many :exchanges, as: :exchange_owner, :dependent => :destroy
 
   has_many :favorites, :through => :matches, :source => :favorite
 
