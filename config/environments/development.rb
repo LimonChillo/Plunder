@@ -45,12 +45,12 @@ Rails.application.configure do
   config.app_domain = 'plunder.com'
 
   # Email
-  config.action_mailer.default_url_options = {:host => 'www.plunder.club'}
+  config.action_mailer.default_url_options = {:host => 'plunderclub.herokuapp.com'}
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :user_name => 'RaketenWirt',
     :password => ENV["sendgrid_key"],
-    :domain => 'www.plunder.club',
+    :domain => 'plunderclub.herokuapp.com',
     :address => 'smtp.sendgrid.net',
     :port => 587,
     :authentication => :plain,
