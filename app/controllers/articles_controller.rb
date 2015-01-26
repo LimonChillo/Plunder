@@ -76,7 +76,7 @@ class ArticlesController < ApplicationController
       current_match.save
 
       #add Exchange Items
-      add_exchange_items current_match
+      Exchange.add_exchange_items current_match, current_user.id
     end
 
     go_back
@@ -111,65 +111,25 @@ class ArticlesController < ApplicationController
     end
 
     Exchange.state_handler(ex, params[:state], params[:choice], current_user.id, other_user, my_article, other_article)
-
     go_back
   end
 
-  def delete_match
+  def delete_exchange
     Exchange.actual(params[:id1], params[:id2]).destroy
   end
 
   private
 
-   def go_back
+  def go_back
     session[:return_to] ||= request.referer
     redirect_to session.delete(:return_to)
   end
 
-  def add_exchange_items(current_match)
-    # get my Articles that the other user liked
-    userOfMatch = Article.where(:id => current_match.favorite_id).pluck(:user_id).first
-    matchesOfOtherUser = Match.where(:user_id => userOfMatch).where(:like => true).all.pluck(:favorite_id)
-    myMatchedArticlesByOtherUser = Article.where(:id => matchesOfOtherUser).where(:user_id => current_user.id).all
-
-    # if other User has not liked any of my Articles go back
-    if myMatchedArticlesByOtherUser == nil
-      go_back
-      return 0
-    end
-
-    # get the other user's Articles I liked
-    myMatches = Match.where(:user_id => current_user.id).where(:like => true).all.pluck(:favorite_id)
-    otherUsersArticlesILiked = Article.where(:user_id => userOfMatch).where(:id => myMatches)
-
-    # if I have not liked any of Other's Articles go back
-    if otherUsersArticlesILiked == nil
-      go_back
-      return 0
-    end
-
-    # iterate through my Articles combine with the Other's i just liked
-    myMatchedArticlesByOtherUser.each do |myArticle|
-      Exchange.create(
-                      :article_id_1 => myArticle.id,
-                      :article_id_2 => current_match.favorite_id,
-                      :user_1 => current_user.id,
-                      :user_2 => userOfMatch,
-                      :user_1_accept => "unset",
-                      :user_2_accept => "unset"
-                      )
-    end
-
+  def set_article
+    @article = Article.find(params[:id])
   end
 
-  # Führt je nach Status und gedrückten Button, Datenbankoperationen aus
-
-
-    def set_article
-      @article = Article.find(params[:id])
-    end
-
-    def article_params
-      params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :crop_x)
-    end
+  def article_params
+    params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :crop_x)
+  end
 end
