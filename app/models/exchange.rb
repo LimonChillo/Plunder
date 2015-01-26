@@ -93,12 +93,12 @@ class Exchange < ActiveRecord::Base
 
     my_articles_matched_by_other_user.each do |my_article|
       Exchange.create(
-                      :article_id_1 => my_article.id,
-                      :article_id_2 => current_match.favorite_id,
-                      :user_1 => current,
-                      :user_2 => user_of_current_match,
-                      :user_1_accept => "unset",
-                      :user_2_accept => "unset"
+                      article_id_1: my_article.id,
+                      article_id_2: current_match.favorite_id,
+                      user_1: current,
+                      user_2: user_of_current_match,
+                      user_1_accept: "unset",
+                      user_2_accept: "unset"
                       )
     end
   end

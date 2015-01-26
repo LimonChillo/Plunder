@@ -1,7 +1,5 @@
-<%
-    first = true
-    user.each do |match|
-%>
+<%  first = true
+    user.each do |match| %>
     <div class="row matchesArticle <%= "#{match[:state]}" %>" id="<%= "#{match[:ex_id]}" %>" >
         <div class="col-md-2">
             <% if first %>
