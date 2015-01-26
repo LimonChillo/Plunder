@@ -20,10 +20,9 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    requested_conversation = Conversation.where(:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]).first
+    requested_conversation = Conversation.by_partners(params[:id1], params[:id2]).first
     if requested_conversation.nil?
       requested_conversation = Conversation.create(:user_1_id => params[:id1], :user_2_id => params[:id2])
-      redirect_to conversation_path requested_conversation.id
     end
     redirect_to conversation_path requested_conversation.id
   end
