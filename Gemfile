@@ -54,8 +54,8 @@ group :development, :test do
   gem 'spring'
 
   gem 'haml'
-  
+
 end
 
-ruby '2.0.0'
+ruby '2.2.0'
 
