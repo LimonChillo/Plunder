@@ -22,7 +22,7 @@ class ConversationsController < ApplicationController
   def create
     requested_conversation = Conversation.by_partners(params[:id1], params[:id2]).first
     if requested_conversation.nil?
-      requested_conversation = Conversation.create(:user_1_id => params[:id1], :user_2_id => params[:id2])
+      requested_conversation = Conversation.create(user_1_id: params[:id1], user_2_id: params[:id2])
     end
     redirect_to conversation_path requested_conversation.id
   end
@@ -38,7 +38,7 @@ class ConversationsController < ApplicationController
   end
 
   def new_message
-    Message.create(:text => params[:text], :sender => current_user.id, :conversation_id => params[:conversation_id])
+    Message.create(text: params[:text], sender: current_user.id, conversation_id: params[:conversation_id])
 
     session[:return_to] ||= request.referer
     redirect_to session.delete(:return_to)
