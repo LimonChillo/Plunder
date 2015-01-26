@@ -1,18 +1,16 @@
+<%	conversation = Conversation.find(params[:id])
+	if conversation.user_1_id == current_user.id
+    user2 = User.by_id(conversation.user_2_id)
+  else
+    user2 = User.by_id(conversation.user_1_id)
+  end %>
+
 <div class="container-fluid">
   <div class="row">
   	<div class="col-md-8 col-md-offset-2">
+  		<h1>Conversation with <b><%= user2.name %></b></h1>
+  		<%= image_tag User.avatar(user2.id, ':thumb'), class: "thumbConv" %>
   		<table class="messages">
-  		<%
-  		conversation = Conversation.find(params[:id])
-  		if conversation.user_1_id == current_user.id
-            user2 = User.by_id(conversation.user_2_id)
-          else
-            user2 = User.by_id(conversation.user_1_id)
-          end
-       %>
-  		<td><%= image_tag User.avatar(user2.id, ':thumb') %>
-        <b><%= user2.name %></b></td>
-
 			<% @messages.each do |message| %>
 				<tr>
 			     <% if message.sender == current_user.id %>
@@ -40,7 +38,7 @@
 			    	<i class="glyphicon glyphicon-send"></i>
 				<% end %>
 
-			  	<span> <%= text_field_tag(:text) %> </span>
+			  	<span> <%= text_field_tag :text, nil, autofocus: true %> </span>
 			  	<%= hidden_field_tag(:conversation_id, params[:id]) %>
 
 			<% end %>
