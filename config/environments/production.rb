@@ -53,7 +53,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     :user_name => 'RaketenWirt',
     :password => ENV["sendgrid_key"],
-    :domain => 'plunder.club',
+    :domain => 'www.plunder.club',
     :address => 'smtp.sendgrid.net',
     :port => 587,
     :authentication => :plain,
