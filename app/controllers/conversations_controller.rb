@@ -22,13 +22,10 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    # @conversation = Conversation.new(conversation_params)
-    # @conversation.save
-    # respond_with(@conversation)
     if !Conversation.where(:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]).exists?
       Conversation.create(:user_1_id => params[:id1], :user_2_id => params[:id2])
     end
-    redirect_to conversations_path
+    redirect_to conversation_path(id:)
   end
 
   def update

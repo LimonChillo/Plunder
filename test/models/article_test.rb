@@ -10,11 +10,9 @@ class ArticleTest < ActiveSupport::TestCase
 		assert !@user_1.articles.create.valid?, 'Article without name createable!'
 	end
 
-	# test "article without user" do
-	# 	assert !Article.create(:name => "Testobjekt").valid?, 'Article without owner createable!'
-	# end
+	# Rails escapes HTML tags automatically, no needs for this test
 
-	test "article without html tags" do
-		assert !@user_1.articles.create(:name => "Testobjekt", :description => "<a class=> hallo").valid?, 'Article can contain HTML Tag!'
-	end
+	# test "article without html tags" do
+	# 	assert !@user_1.articles.create(:name => "Testobjekt", :description => "<a class=> hallo").valid?, 'Article can contain HTML Tag!'
+	# end
 end

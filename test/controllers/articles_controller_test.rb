@@ -5,6 +5,9 @@ class ArticlesControllerTest < ActionController::TestCase
     @article = articles(:one)
   end
 
+  # Die auskommentierten Tests beziehen sich auf die durch Scaffolding angelegten Funktionen welche wir nicht nutzen
+
+
   # test "should get index" do
   #   get :index
   #   assert_response :success
@@ -43,7 +46,6 @@ class ArticlesControllerTest < ActionController::TestCase
   #   assert_difference('Article.count', -1) do
   #     delete :destroy, id: @article
   #   end
-
   #   assert_redirected_to articles_path
   # end
 end
