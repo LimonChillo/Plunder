@@ -1,13 +1,21 @@
-<%	conversation = Conversation.find(params[:id])
-	if conversation.user_1_id == current_user.id
-    user2 = User.by_id(conversation.user_2_id)
-  else
-    user2 = User.by_id(conversation.user_1_id)
-  end %>
-
 <div class="container-fluid">
   <div class="row">
-  	<div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-2">
+      <%	conversation = Conversation.find(params[:id])
+      	if conversation.user_1_id == current_user.id
+          user2 = User.by_id(conversation.user_2_id)
+          user1 = User.by_id(conversation.user_1_id)
+        else
+          user2 = User.by_id(conversation.user_1_id)
+          user1 = User.by_id(conversation.user_2_id)
+        end %>
+        <%
+          if user1.id != current_user.id
+        %>
+            <h1>Forbidden!</h1>
+            <h2>You can't see conversations that don't belong to you</h2>
+        <% else %>
+
   		<h1>Conversation with <b><%= user2.name %></b></h1>
   		<%= image_tag User.avatar(user2.id, ':thumb'), class: "thumbConv" %>
   		<table class="messages">
@@ -43,6 +51,7 @@
 
 			<% end %>
 		</div>
+    <% end %>
   	</div>
   </div>
 </div>
