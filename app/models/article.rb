@@ -1,7 +1,9 @@
 class Article < ActiveRecord::Base
-  has_many :matches, :dependent => :destroy
+  # destroy fails due to dependencies!
+  # has_many :matches, :dependent => :destroy
+
   has_many :users, :through => :matches
-  has_many :exchanges, :as => :exchange_owner, :dependent => :destroy
+  #has_many :exchanges, :as => :exchange_owner, :dependent => :destroy
   belongs_to :user
 
   has_attached_file :avatar, styles: { large: "600x600", medium: "300x300#", thumb: "100x100#" }, default_url: "/images/:style/missing.png"
