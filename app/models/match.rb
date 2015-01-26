@@ -8,4 +8,7 @@ class Match < ActiveRecord::Base
   scope :by, ->(id) {
       where(user_id: id)
   }
+  scope :current, ->(id1, id2) {  
+      where(user_id: id1).where(favorite_id: id2).first
+  }
 end

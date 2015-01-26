@@ -103,7 +103,6 @@ class Exchange < ActiveRecord::Base
     end
   end
 
-
   private
     def no_self_exchange
       errors.add(:user_1, 'No Exchange with yourself!') if user_1 == user_2

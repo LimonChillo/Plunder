@@ -5,6 +5,8 @@ class ConversationsControllerTest < ActionController::TestCase
     @conversation = conversations(:one)
   end
 
+  # Die auskommentierten Tests beziehen sich auf die durch Scaffolding angelegten Funktionen welche wir nicht nutzen
+
   # test "should get index" do
   #   get :index
   #   assert_response :success
@@ -19,9 +21,8 @@ class ConversationsControllerTest < ActionController::TestCase
   # test "should create conversation" do
   #   assert_difference('Conversation.count') do
   #     post :create, conversation: { user_1_id: @conversation.user_1_id, user_2_id: @conversation.user_2_id }
-  #   end
-
-  #   assert_redirected_to conversation_path(assigns(:conversation))
+  # end
+  #    assert_redirected_to conversation_path(assigns(:conversation))
   # end
 
   # test "should show conversation" do

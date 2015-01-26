@@ -45,17 +45,14 @@ class ArticlesController < ApplicationController
   end
 
   def like
-    # favorite Others article and like it
     current_user.favorites << Article.find(params[:id])
     if params[:choice] == "yes"
-      current_match = Match.where(:user_id => current_user).where(:favorite_id => params[:id]).first
+      current_match = Match.current(current_user.id, params[:id])
       current_match.like = true
       current_match.save
 
-      #add Exchange Items
       Exchange.add_exchange_items current_match, current_user.id
     end
-
     go_back
   end
 
