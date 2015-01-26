@@ -30,7 +30,7 @@
 			<%= form_tag({controller: "conversations", action: "new_message"}, method: "post")   do %>
 
 
-			  	<%= link_to conversation_path(:id => params[:id]), class: "btn btn-success" do %>
+			  	<%= link_to conversation_path(id: params[:id]), class: "btn btn-success" do %>
 			    	<i class="glyphicon glyphicon-refresh"></i>
 				<% end %>
 

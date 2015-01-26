@@ -46,8 +46,8 @@
         </div>
 
         <div class="actions">
-          <%= f.submit "Update", :class => "btn btn-success" %>
-          <%= link_to "Back", :back, :class => "btn btn-warning" %>
+          <%= f.submit "Update", class: "btn btn-success" %>
+          <%= link_to "Back", :back, class: "btn btn-warning" %>
         </div>
 
       <% end %>
@@ -58,7 +58,7 @@
       <br>
       <div class="dangerzone">
 
-      <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "This will delete your Account.\nFor ever.\n\nAre you sure?" }, method: :delete , :class => "btn btn-danger"%></p>
+      <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "This will delete your Account.\nFor ever.\n\nAre you sure?" }, method: :delete , class: "btn btn-danger"%></p>
 
       </div>
   </div>
