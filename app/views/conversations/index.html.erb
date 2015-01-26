@@ -1,27 +1,30 @@
-<h1>My Conversations</h1>
+<div class="row editUser">
+  <div class="col-md-4 col-md-offset-4">
+    <h1>My Conversations</h1>
 
-<table class = "table table-striped table-condensed">
-  <tbody>
-    <% @conversations.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id).each do |conversation| 
+    <table class = "table table-striped table-condensed">
+      <tbody>
+        <% @conversations.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id).each do |conversation|
 
-      if conversation.user_1_id == current_user.id
-        user2 = conversation.user_2_id
-      else
-        user2 = conversation.user_1_id
-      end
-    %>
-      <tr>
-        <td><%= image_tag User.where(:id => user2).first.avatar.url(:thumb) %></td>
-        <td class="conversation_info" ><b><%= User.where(:id => user2).pluck(:name).first %></b></td>
-       <td class="conversation_info" >
-        <%= link_to 'Show', conversation, class: 'btn btn-info btn-xs' %>
-        <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
-        </td>
-      </tr>
+          if conversation.user_1_id == current_user.id
+            user2 = User.by_id(conversation.user_2_id)
+          else
+            user2 = User.by_id(conversation.user_1_id)
+          end
+        %>
+          <tr>
+            <td><%= image_tag User.avatar(user2.id, ':thumb') %></td>
+            <td class="conversation_info" ><b><%= user2.name %></b></td>
+           <td class="conversation_info" >
+            <%= link_to 'Show', conversation, class: 'btn btn-info btn-xs' %>
+            <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if !@conversations.any? %>
+      <h3>Sorry, no conversations yet :( </h3>
     <% end %>
-  </tbody>
-</table>
-<% if !@conversations.any? %>
-  <h3>Sorry, no conversations yet :( </h3>
-<% end %>
-
+  </div>
+</div>

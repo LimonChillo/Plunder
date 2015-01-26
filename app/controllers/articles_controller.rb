@@ -40,8 +40,8 @@ class ArticlesController < ApplicationController
   def random
     others_articles = Article.unless(current_user.id)
     matched_by_me = Match.by(current_user.id).pluck(:favorite_id)
-    amount = others_articles.count
-    @random_article = others_articles.where.not(:id => matched_by_me).offset(rand(amount)).first
+    unseen_articles = others_articles.where.not(:id => matched_by_me)
+    @random_article = unseen_articles.offset(rand(unseen_articles.count)).first
   end
 
   def like
@@ -64,7 +64,7 @@ class ArticlesController < ApplicationController
       Exchange.with_this_user(current_user.id, other).each do |ex|
 
         users_articles = Exchange.get_users_article(ex, current_user.id)
-        hash = {other: users_articles[1], my: users_articles[0], state: Exchange.get_state(ex, current_user.id)}
+        hash = {other: users_articles[1], my: users_articles[0], state: Exchange.get_state(ex, current_user.id), ex_id: ex.id}
         exchanges_per_user.push(hash)
       end
       @exchanges_for_view.push(exchanges_per_user)
@@ -83,9 +83,8 @@ class ArticlesController < ApplicationController
       other_user = ex.user_1
       other_article = ex.article_id_1
     end
-
     Exchange.state_handler(ex, params[:state], params[:choice], current_user.id, other_user, my_article, other_article)
-    go_back
+    go_back(ex.id.to_s)
   end
 
   def delete_exchange
@@ -94,8 +93,12 @@ class ArticlesController < ApplicationController
 
   private
 
-  def go_back
-    session[:return_to] ||= request.referer
+  def go_back(id = "#")
+    if id.nil?
+      id = "?"
+    end
+    session[:return_to] ||= request.referer + "#" + id
+
     redirect_to session.delete(:return_to)
   end
 
@@ -104,6 +107,6 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
-    params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :crop_x)
+    params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :ex_id)
   end
 end

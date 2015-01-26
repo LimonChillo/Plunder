@@ -16,7 +16,7 @@
     	overflow: hidden;
     	padding-right:10px;
     	padding-top: 4px;
-		
+
 		input {
 			width: 100%;
 		}
@@ -40,14 +40,21 @@
 		}
 		td:nth-child(3) {
 			width: 40%;
-			max-width: 40%;
-		}	
-	}	
+			max-width: 40%;	
+		}
+	}
+}
+
+.thumbConv {
+	width: 70px;
+	border-radius: 35px;
+	-webkit-border-radius: 35px;
+	-moz-border-radius: 35px;
 }
 
 .own {
 	background-color: rgba(32,255,99,0.2);
-	padding: 5px 10px; 
+	padding: 5px 10px;
 }
 
 .other {

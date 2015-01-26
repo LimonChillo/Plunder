@@ -3,7 +3,16 @@ class Conversation < ActiveRecord::Base
 
 	validates :user_1_id, :presence => true
 	validates :user_2_id, :presence => true
-  	validate :no_conversation_with_same_user
+  validate :no_conversation_with_same_user
+
+  scope :by_partners, ->(id1, id2) {
+    where(user_1_id: [id1, id2], user_2_id: [id1, id2])
+  }
+
+  scope :by_id, ->(id) {
+    find(id)
+  }
+
 
   private
     def no_conversation_with_same_user

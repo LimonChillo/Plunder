@@ -3,7 +3,7 @@
     <div class="col-md-4 col-md-offset-4">
       <% if @random_article != nil %>
         <div class="randomImg">
-          <%= image_tag @random_article.avatar.url(:medium), :class => 'img-responsive'  %>
+          <%= image_tag @random_article.avatar.url(:medium), class: 'img-responsive'  %>
         </div>
         <h1>
           <%= @random_article.name %>
@@ -29,15 +29,15 @@
           %>
         </p>
 
-        <%= link_to 'Can I has?', like_article_path(:id => @random_article.id, :choice => "yes"), :class => 'btn btn-success btn-lg', :id => "yes" %>
-        <%= link_to 'Nope', like_article_path(:id => @random_article.id, :choice => "no"), :class => 'btn btn-danger  btn-lg', :id => "no" %>
+        <%= link_to 'Can I has?', like_article_path(id: @random_article.id, choice: "yes"), class: 'btn btn-success btn-lg', id: "yes" %>
+        <%= link_to 'Nope', like_article_path(id: @random_article.id, choice: "no"), class: 'btn btn-danger  btn-lg', id: "no" %>
         <br><br>
         <p>Use your keyboard: 'A' - Can I has | 'D' - Nope</p>
 
       <% else %>
         <h2> There are no Articles you have not seen yet :(</h2>
         <br />
-        <%= link_to 'Check again', random_article_path, :class => 'btn btn-default center-block' %>
+        <%= link_to 'Check again', random_article_path, class: 'btn btn-default center-block' %>
       <% end %>
     </div>
 </div>
