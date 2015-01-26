@@ -84,128 +84,42 @@ class ArticlesController < ApplicationController
 
   def matches
     @exchanges_for_view = []
-
-    other_user = (Exchange.where(user_1: current_user.id).distinct.pluck(:user_2) | Exchange.where(user_2: current_user.id).distinct.pluck(:user_1)).sort!
-
-    other_user.each do |other|
-
-      exchanges_with_other_user = Exchange.where(user_1: [other, current_user.id], user_2: [other, current_user.id])
+    Exchange.matched_users(current_user.id).each do |other|
+      
       exchanges_per_user = []
-      exchanges_with_other_user.each do |ex|
-          logger.debug "###################"
-          logger.debug "ex.user_1:"
-          logger.debug ex.user_1
-          logger.debug "ex.user_2:"
-          logger.debug ex.user_2
-          logger.debug "###################"
-          # setzen der states
-          if ex.user_1_accept == "accepted" && ex.user_2_accept == "unset" && ex.user_1 == current_user.id
-            state = "iAccepted"
-          elsif ex.user_1_accept == "accepted" && ex.user_2_accept == "unset"
-            state = "accepted"
-          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "unset" && ex.user_1 == current_user.id
-            state = "iRejected"
-          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "unset"
-            state = "rejected"
-          elsif ex.user_1_accept == "accepted" && ex.user_2_accept == "accepted"
-            state = "bothAccepted"
-          elsif ex.user_1_accept == "rejected" && ex.user_2_accept == "rejected"
-            state = "bothRejected"
-          else
-            state = "neutral"
-          end
-
-          # Welcher Artikel gehört zu welchem User
-          if ex.user_1 == current_user.id
-            my_article = ex.article_id_1
-            other_article = ex.article_id_2
-          else
-            my_article = ex.article_id_2
-            other_article = ex.article_id_1
-          end
-          logger.debug "###################"
-          logger.debug "article_id_1:"
-          logger.debug ex.article_id_1
-          logger.debug "article_id_2:"
-          logger.debug ex.article_id_2
-          logger.debug "###################"
-
-          logger.debug "###################"
-          logger.debug "my_article:"
-          logger.debug my_article
-          logger.debug "other_article:"
-          logger.debug other_article
-          logger.debug "###################"
-
-          # Weitergabe des Matching Paares als Hash
-          hash = { :other => Article.find(other_article), :my => Article.find(my_article), :state => state}
-          exchanges_per_user.push(hash)
+      Exchange.with_this_user(current_user.id, other).each do |ex|
+          
+        users_articles = Exchange.get_users_article(ex, current_user.id)
+        hash = {other: users_articles[1], my: users_articles[0], state: Exchange.get_state(ex, current_user.id)}
+        exchanges_per_user.push(hash)
       end
-
       @exchanges_for_view.push(exchanges_per_user)
-
      end
   end
 
   def exchange_handler
+    ex = Exchange.actual(params[:id1], params[:id2])
 
-    action = params[:choice]
-    state = params[:state]
-    id1 = params[:id1]
-    id2 = params[:id2]
-
-    actualExchange = actual_exchange_method id1, id2
-
-    if actualExchange.user_1 == current_user.id
-      my_article = actualExchange.article_id_1
-      otherUser = actualExchange.user_2
-      other_article = actualExchange.article_id_2
+    if ex.user_1 == current_user.id
+      my_article = ex.article_id_1
+      other_user = ex.user_2
+      other_article = ex.article_id_2
     else
-      my_article = actualExchange.article_id_2
-      otherUser = actualExchange.user_1
-      other_article = actualExchange.article_id_1
+      my_article = ex.article_id_2
+      other_user = ex.user_1
+      other_article = ex.article_id_1
     end
 
-    case state
-    when "accepted"
-      if action == "yes"
-        actualExchange.update_attributes(:user_2_accept => "accepted")
-      else
-        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
-      end
-    when "iAccepted"
-      # Undo Acception
-      actualExchange.update_attributes(:user_1_accept => "rejected")
-    when "iRejected"
-      # Undo Rejection
-      actualExchange.update_attributes(:user_1_accept => "accepted")
-    when "bothAccepted"
-      actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
-    when "neutral"
-      if action == "yes"
-        actualExchange.update_attributes(:user_1_accept => "accepted", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
-      else
-        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
-      end
-    end
+    Exchange.state_handler(ex, params[:state], params[:choice], current_user.id, other_user, my_article, other_article)
 
     go_back
   end
 
   def delete_match
-    id1 = params[:id1]
-    id2 = params[:id2]
-
-    Exchange.where(:article_id_1 => [id1,id2], :article_id_2 => [id1,id2]).first.destroy
-
-    go_back
+    Exchange.actual(params[:id1], params[:id2]).destroy
   end
 
   private
-
-  def actual_exchange_method(my_id, other_id)
-    Exchange.find_by_article_id_1_and_article_id_2([my_id,other_id],[my_id,other_id])
-  end
 
    def go_back
     session[:return_to] ||= request.referer
