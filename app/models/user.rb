@@ -17,6 +17,29 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
 
+  scope :by_id, ->(id) {
+    where(id: id).first
+  }
+
+  scope :avatar, ->(id, size) {
+    if size == ":thumb"
+      where(id: id).first.avatar.url(:thumb)
+    else
+      where(id: id).first.avatar.url(:medium)
+    end
+  }
+
+  def self.avatar1 (size)
+    if size == ":thumb"
+      avatar = avatar.url(:thumb)
+    else
+      avatar = avatar.url(:thumb)
+    end
+    return avatar
+  end
+
+
+
   def self.find_for_oauth(auth, signed_in_resource = nil)
 
     # Get the identity and user if they exist

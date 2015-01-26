@@ -2,6 +2,17 @@
   <div class="row">
   	<div class="col-md-8 col-md-offset-2">
   		<table class="messages">
+  		<%
+  		conversation = Conversation.find(params[:id])
+  		if conversation.user_1_id == current_user.id
+            user2 = User.by_id(conversation.user_2_id)
+          else
+            user2 = User.by_id(conversation.user_1_id)
+          end
+       %>
+  		<td><%= image_tag User.avatar(user2.id, ':thumb') %>
+        <b><%= user2.name %></b></td>
+
 			<% @messages.each do |message| %>
 				<tr>
 			     <% if message.sender == current_user.id %>
@@ -12,15 +23,15 @@
 			     	<td class="other"><%= message.text %></td>
 			    	<td></td>
 			    	<td></td>
-			     <% end %>	
+			     <% end %>
 			    </tr>
 			<% end %>
 		</table>
 
 		<div class="control">
 			<%= form_tag({controller: "conversations", action: "new_message"}, method: "post")   do %>
-			  	
-			  	
+
+
 			  	<%= link_to conversation_path(:id => params[:id]), class: "btn btn-success" do %>
 			    	<i class="glyphicon glyphicon-refresh"></i>
 				<% end %>
@@ -28,10 +39,10 @@
 				<%= button_tag(type: "submit", class: "btn btn-primary") do %>
 			    	<i class="glyphicon glyphicon-send"></i>
 				<% end %>
-				
+
 			  	<span> <%= text_field_tag(:text) %> </span>
 			  	<%= hidden_field_tag(:conversation_id, params[:id]) %>
-			  	
+
 			<% end %>
 		</div>
   	</div>

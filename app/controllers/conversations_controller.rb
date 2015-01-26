@@ -38,7 +38,6 @@ class ConversationsController < ApplicationController
   end
 
   def new_message
-
     Message.create(:text => params[:text], :sender => current_user.id, :conversation_id => params[:conversation_id])
 
     session[:return_to] ||= request.referer

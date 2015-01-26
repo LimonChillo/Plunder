@@ -7,14 +7,14 @@
         <% @conversations.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id).each do |conversation|
 
           if conversation.user_1_id == current_user.id
-            user2 = conversation.user_2_id
+            user2 = User.by_id(conversation.user_2_id)
           else
-            user2 = conversation.user_1_id
+            user2 = User.by_id(conversation.user_1_id)
           end
         %>
           <tr>
-            <td><%= image_tag User.where(:id => user2).first.avatar.url(:thumb) %></td>
-            <td class="conversation_info" ><b><%= User.where(:id => user2).pluck(:name).first %></b></td>
+            <td><%= image_tag User.avatar(user2.id, ':thumb') %></td>
+            <td class="conversation_info" ><b><%= user2.name %></b></td>
            <td class="conversation_info" >
             <%= link_to 'Show', conversation, class: 'btn btn-info btn-xs' %>
             <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
