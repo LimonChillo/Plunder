@@ -6,4 +6,8 @@ class Match < ActiveRecord::Base
     :presence => true,
     :uniqueness => { :scope => :user_id }
   validates :user_id, :presence => true
+
+  scope :by, ->(id) {
+      where(user_id: id)
+  }
 end
