@@ -88,11 +88,16 @@ class ArticlesController < ApplicationController
     other_user = (Exchange.where(user_1: current_user.id).distinct.pluck(:user_2) | Exchange.where(user_2: current_user.id).distinct.pluck(:user_1)).sort!
 
     other_user.each do |other|
-      
+
       exchanges_with_other_user = Exchange.where(user_1: [other, current_user.id], user_2: [other, current_user.id])
       exchanges_per_user = []
       exchanges_with_other_user.each do |ex|
-          
+          logger.debug "###################"
+          logger.debug "ex.user_1:"
+          logger.debug ex.user_1
+          logger.debug "ex.user_2:"
+          logger.debug ex.user_2
+          logger.debug "###################"
           # setzen der states
           if ex.user_1_accept == "accepted" && ex.user_2_accept == "unset" && ex.user_1 == current_user.id
             state = "iAccepted"
@@ -118,6 +123,19 @@ class ArticlesController < ApplicationController
             my_article = ex.article_id_2
             other_article = ex.article_id_1
           end
+          logger.debug "###################"
+          logger.debug "article_id_1:"
+          logger.debug ex.article_id_1
+          logger.debug "article_id_2:"
+          logger.debug ex.article_id_2
+          logger.debug "###################"
+
+          logger.debug "###################"
+          logger.debug "my_article:"
+          logger.debug my_article
+          logger.debug "other_article:"
+          logger.debug other_article
+          logger.debug "###################"
 
           # Weitergabe des Matching Paares als Hash
           hash = { :other => Article.find(other_article), :my => Article.find(my_article), :state => state}
@@ -139,9 +157,13 @@ class ArticlesController < ApplicationController
     actualExchange = actual_exchange_method id1, id2
 
     if actualExchange.user_1 == current_user.id
+      my_article = actualExchange.article_id_1
       otherUser = actualExchange.user_2
+      other_article = actualExchange.article_id_2
     else
+      my_article = actualExchange.article_id_2
       otherUser = actualExchange.user_1
+      other_article = actualExchange.article_id_1
     end
 
     case state
@@ -149,7 +171,7 @@ class ArticlesController < ApplicationController
       if action == "yes"
         actualExchange.update_attributes(:user_2_accept => "accepted")
       else
-        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
+        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
       end
     when "iAccepted"
       # Undo Acception
@@ -158,12 +180,12 @@ class ArticlesController < ApplicationController
       # Undo Rejection
       actualExchange.update_attributes(:user_1_accept => "accepted")
     when "bothAccepted"
-      actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser)
+      actualExchange.update_attributes(:user_1_accept => "rejected", :user_2_accept => "unset", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
     when "neutral"
       if action == "yes"
-        actualExchange.update_attributes(:user_1_accept => "accepted", :user_1 => current_user.id, :user_2 => otherUser)
+        actualExchange.update_attributes(:user_1_accept => "accepted", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
       else
-        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser)
+        actualExchange.update_attributes(:user_1_accept => "rejected", :user_1 => current_user.id, :user_2 => otherUser, :article_id_1 => my_article, :article_id_2 => other_article)
       end
     end
 
