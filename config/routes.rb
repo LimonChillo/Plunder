@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
   post 'articles/:id/edit' => 'articles#edit', :as => "edit_article"
   get 'articles/exchangeHandler' =>'articles#exchange_handler', :as => "exchange_handler"
-  get 'articles/delete_match' =>'articles#delete_match', :as => "delete_match"
+  get 'articles/delete_exchange' =>'articles#delete_exchange', :as => "delete_exchange"
 
   resources :articles
 
