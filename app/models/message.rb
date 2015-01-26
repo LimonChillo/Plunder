@@ -6,4 +6,8 @@ class Message < ActiveRecord::Base
 
 	validates :text,
     :presence => true
+
+  scope :of_conversation, ->(conversation) {
+      where(conversation_id: conversation)
+  }
 end

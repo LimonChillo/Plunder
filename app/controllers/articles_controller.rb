@@ -40,8 +40,8 @@ class ArticlesController < ApplicationController
   def random
     others_articles = Article.unless(current_user.id)
     matched_by_me = Match.by(current_user.id).pluck(:favorite_id)
-    amount = others_articles.count
-    @random_article = others_articles.where.not(:id => matched_by_me).offset(rand(amount)).first
+    unseen_articles = others_articles.where.not(:id => matched_by_me)
+    @random_article = unseen_articles.offset(rand(unseen_articles.count)).first
   end
 
   def like

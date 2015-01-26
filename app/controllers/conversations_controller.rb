@@ -1,6 +1,5 @@
 class ConversationsController < ApplicationController
   before_action :set_conversation, only: [:show, :edit, :update, :destroy]
-
   respond_to :html
 
   def index
@@ -9,8 +8,7 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    #respond_with(@conversation)
-    @messages = Message.where(:conversation_id => params[:id])
+    @messages = Message.of_conversation(params[:id])
   end
 
   def new
@@ -22,13 +20,12 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    # @conversation = Conversation.new(conversation_params)
-    # @conversation.save
-    # respond_with(@conversation)
-    if !Conversation.where(:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]).exists?
-      Conversation.create(:user_1_id => params[:id1], :user_2_id => params[:id2])
+    requested_conversation = Conversation.where(:user_1_id => [params[:id1], params[:id2]], :user_2_id => [params[:id1], params[:id2]]).first
+    if requested_conversation.nil?
+      requested_conversation = Conversation.create(:user_1_id => params[:id1], :user_2_id => params[:id2])
+      redirect_to conversation_path requested_conversation.id
     end
-    redirect_to conversations_path
+    redirect_to conversation_path requested_conversation.id
   end
 
   def update
