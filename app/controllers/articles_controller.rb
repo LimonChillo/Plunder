@@ -55,6 +55,7 @@ class ArticlesController < ApplicationController
       Exchange.add_exchange_items current_match, current_user.id
     end
     go_back
+    return 0
   end
 
   def matches
@@ -95,11 +96,8 @@ class ArticlesController < ApplicationController
   private
 
   def go_back(id = "#")
-    if id.nil?
-      id = "?"
-    end
-    session[:return_to] ||= request.referer + "#" + id
 
+    session[:return_to] ||= request.referer
     redirect_to session.delete(:return_to)
   end
 

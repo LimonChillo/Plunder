@@ -2,7 +2,7 @@ class Article < ActiveRecord::Base
   # destroy fails due to dependencies!
   has_many :matches #, :dependent => :destroy
 
-  has_many :users, :through => :matches
+  has_many :users, :through => :matches, :class => "Article"
   #has_many :exchanges, :as => :exchange_owner, :dependent => :destroy
   belongs_to :user
 
