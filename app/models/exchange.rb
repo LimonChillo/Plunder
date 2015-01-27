@@ -103,6 +103,10 @@ class Exchange < ActiveRecord::Base
     end
   end
 
+  def self.destroy_exchanges_with_article(article_id)
+    Exchange.where("article_id_1 = ? OR article_id_2 = ?", article_id, article_id).first.destroy
+  end
+
   private
     def no_self_exchange
       errors.add(:user_1, 'No Exchange with yourself!') if user_1 == user_2

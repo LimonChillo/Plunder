@@ -33,6 +33,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
+    Exchange.destroy_exchanges_with_article @article.id
     @article.destroy
     respond_with(@article)
   end
