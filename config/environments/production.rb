@@ -94,7 +94,9 @@ Rails.application.configure do
   :s3_credentials => {
     :bucket => "plunderclub",
     :access_key_id => ENV['amazon_key'],
-    :secret_access_key => ENV['amazon_secret']
+    :secret_access_key => ENV['amazon_secret'],
+    :path => "/image/:id/:filename",
+    :url => ":s3_domain_url"
   }
 }
 end
