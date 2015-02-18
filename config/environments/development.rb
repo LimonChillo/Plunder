@@ -70,7 +70,7 @@ Rails.application.configure do
     :access_key_id => ENV['amazon_key'],
     :secret_access_key => ENV['amazon_secret'],
     :path => "/image/:id/:filename",
-    :url => ":s3_domain_url",
+    :url => ":s3_domain_url"
     :s3_host_name => "s3-eu-central-1.amazonaws.com"
     }
   }
