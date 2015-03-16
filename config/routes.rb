@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'about/legal', :as => "legal"
+
   get 'articles/matches' =>'articles#matches', :as => "matches_article"
   get 'articles/random' => 'articles#random', :as => "random_article"
   get 'articles/like/:id' => 'articles#like', :as => "like_article"
