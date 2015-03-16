@@ -20,6 +20,7 @@
   		<%= image_tag User.avatar(user2.id, ':thumb'), class: "thumbConv" %>
   		<table class="messages">
 			<% @messages.each do |message| %>
+				<%cache(message) do%>
 				<tr>
 			     <% if message.sender == current_user.id %>
 			     	<td></td>
@@ -31,6 +32,7 @@
 			    	<td></td>
 			     <% end %>
 			    </tr>
+				<% end %>
 			<% end %>
 		</table>
 

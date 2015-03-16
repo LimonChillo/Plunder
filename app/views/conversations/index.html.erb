@@ -12,14 +12,16 @@
             user2 = User.by_id(conversation.user_1_id)
           end
         %>
-          <tr>
-            <td><%= image_tag User.avatar(user2.id, ':thumb') %></td>
-            <td class="conversation_info" ><b><%= user2.name %></b></td>
-           <td class="conversation_info" >
-            <%= link_to 'Show', conversation, class: 'btn btn-info btn-xs' %>
-            <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
-            </td>
-          </tr>
+          <%cache(conversation) do%>
+            <tr>
+              <td><%= image_tag User.avatar(user2.id, ':thumb') %></td>
+              <td class="conversation_info" ><b><%= user2.name %></b></td>
+             <td class="conversation_info" >
+              <%= link_to 'Show', conversation, class: 'btn btn-info btn-xs' %>
+              <%= link_to 'Delete', conversation, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

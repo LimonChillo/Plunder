@@ -5,10 +5,15 @@ class ConversationsController < ApplicationController
   def index
     @conversations = Conversation.all
     respond_with(@conversations)
+
+     fresh_when :etag => @conversations.all, 
+               :last_modified => @conversation.maximum(:updated_at)
   end
 
   def show
     @messages = Message.of_conversation(params[:id])
+
+    fresh_when @messages
   end
 
   def new

@@ -8,10 +8,15 @@ class ArticlesController < ApplicationController
   def index
     @articles = Article.all
     respond_with(@articles)
+
+     fresh_when :etag => @articles.all, 
+               :last_modified => @articles.maximum(:updated_at)
   end
 
   def show
     respond_with(@article)
+
+     fresh_when @article
   end
 
   def new
@@ -62,6 +67,9 @@ class ArticlesController < ApplicationController
   end
 
   def matches
+    fresh_when :etag => Exchange.all, 
+               :last_modified => Exchange.all.maximum(:updated_at)
+
     @exchanges_for_view = []
     Exchange.matched_users(current_user.id).each do |other|
 

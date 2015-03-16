@@ -17,22 +17,25 @@
         <% @articles.where(user_id: current_user).each do |article|
           it = article.id
           %>
-          <tr>
-            <td><%= link_to( image_tag(article.avatar.url(:thumb), class: "tinyArticleImg"), article_path(article.id)) %></td>
-            <td><%= article.name %></td>
-            <td><%= article.description %></td>
-            <td class="center">
-              <% if article.shippable? %>
-                  <i class="glyphicon glyphicon-ok ship-yes"></i>
-              <% else %>
-                <i class="glyphicon glyphicon-remove ship-no"></i>
-              <% end %>
-            </td>
-            <td><%= link_to 'Show', article, class: 'btn btn-info btn-xs' %>
-            <%= link_to 'Edit', edit_article_path(id: it), method: :post, class: 'btn btn-success btn-xs' %>
-            <%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
-            </td>
-          </tr>
+          <%cache(article) do%>
+          
+            <tr>
+              <td><%= link_to( image_tag(article.avatar.url(:thumb), class: "tinyArticleImg"), article_path(article.id)) %></td>
+              <td><%= article.name %></td>
+              <td><%= article.description %></td>
+              <td class="center">
+                <% if article.shippable? %>
+                    <i class="glyphicon glyphicon-ok ship-yes"></i>
+                <% else %>
+                  <i class="glyphicon glyphicon-remove ship-no"></i>
+                <% end %>
+              </td>
+              <td><%= link_to 'Show', article, class: 'btn btn-info btn-xs' %>
+              <%= link_to 'Edit', edit_article_path(id: it), method: :post, class: 'btn btn-success btn-xs' %>
+              <%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-xs' %>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
