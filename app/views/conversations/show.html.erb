@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-2 white">
       <%	conversation = Conversation.find(params[:id])
       	if conversation.user_1_id == current_user.id
           user2 = User.by_id(conversation.user_2_id)

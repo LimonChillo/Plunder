@@ -1,3 +1,6 @@
+
+
+
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
   respond_to :html
@@ -109,3 +112,5 @@ class ArticlesController < ApplicationController
     params.require(:article).permit(:name, :user_id, :avatar, :description, :shippable, :ex_id)
   end
 end
+
+
