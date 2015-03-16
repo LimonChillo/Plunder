@@ -7,7 +7,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
- <%= image_tag("logo.png", size: "300x90", alt: "logo", class: "logo") %>
+ <%= link_to( image_tag("logo.png", size: "300x90", alt: "logo", class: "logo"), random_article_path )%>
 <ul class="nav">
   <p class="navbar-text pull-left">
 
