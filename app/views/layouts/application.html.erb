@@ -7,10 +7,15 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
- <%= link_to( image_tag("logo.png", size: "300x90", alt: "logo", class: "logo"), random_article_path )%>
+ <%=  link_to( image_tag("logo.png", size: "300x90", alt: "logo", class: "logo"),
+      if user_signed_in?
+         random_article_path
+      else
+        root_path
+      end
+      )  %>
 <ul class="nav">
   <p class="navbar-text pull-left">
-
 
   </p>
   <p class="navbar-text pull-right">
